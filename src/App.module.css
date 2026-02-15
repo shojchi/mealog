@@ -1,0 +1,100 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav {
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-light);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navContent {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-teal);
+  margin: 0;
+}
+
+.navButtons {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.navButton {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.navButton:hover {
+  color: var(--color-teal);
+  background: rgba(107, 158, 158, 0.05);
+}
+
+.navButton.active {
+  color: var(--color-teal);
+  border-color: var(--color-teal);
+  background: rgba(107, 158, 158, 0.1);
+}
+
+.main {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    font-size: 1.25rem;
+  }
+
+  .navContent {
+    padding: var(--spacing-sm) var(--spacing-md);
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .navButtons {
+    width: 100%;
+    gap: var(--spacing-xs);
+  }
+  
+  .navButton {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-xs);
+    font-size: 0.875rem;
+  }
+}
+
+/* Extra small devices (phones, less than 400px) */
+@media (max-width: 400px) {
+  .logo {
+    font-size: 1.1rem;
+  }
+
+  .navContent {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .navButton {
+    padding: var(--spacing-xs);
+    font-size: 0.8rem;
+  }
+}
