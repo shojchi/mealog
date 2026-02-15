@@ -46,3 +46,10 @@ src/
 - ✅ Nutrition tracking
 - ✅ Shopping list generation
 - ✅ Meal catalog with filtering
+
+## For further updates:
+
+```bash
+npm run build
+firebase deploy --only hosting
+```
