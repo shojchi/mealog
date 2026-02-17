@@ -175,7 +175,7 @@ export interface ShoppingListItem {
  */
 export interface ShoppingList {
   id: number;
-  weekStartDate: Date;
+  weekStartDate: number; // Monday timestamp (matches WeeklyPlan.weekStart)
   items: ShoppingListItem[];
   totalBudget?: number;
   createdAt: Date;
