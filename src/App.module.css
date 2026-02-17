@@ -20,6 +20,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-md);
 }
 
 .logo {
@@ -55,6 +56,28 @@
   border-color: var(--color-teal);
   background: rgba(107, 158, 158, 0.1);
 }
+
+.settingsButton {
+  padding: var(--spacing-sm);
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+}
+
+.settingsButton:hover {
+  background: rgba(107, 158, 158, 0.1);
+  border-color: var(--color-teal);
+  transform: rotate(45deg);
+}
+
 
 .main {
   flex: 1;
@@ -101,19 +124,26 @@
 
   .navContent {
     padding: var(--spacing-sm) var(--spacing-md);
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: var(--spacing-sm);
   }
   
   .navButtons {
     width: 100%;
     gap: var(--spacing-xs);
+    order: 2;
   }
   
   .navButton {
     flex: 1;
     padding: var(--spacing-sm) var(--spacing-xs);
     font-size: 0.875rem;
+  }
+
+  .settingsButton {
+    font-size: 1.25rem;
+    min-width: 40px;
+    height: 40px;
   }
 }
 

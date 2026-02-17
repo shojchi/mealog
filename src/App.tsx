@@ -3,6 +3,7 @@ import { MealCatalog } from './components/MealCatalog';
 import { WeekView } from './components/WeekView';
 import { DayView } from './components/DayView';
 import { ShoppingListView } from './components/ShoppingListView';
+import { SettingsModal } from './components/SettingsModal';
 import styles from './App.module.css';
 
 type View = 'catalog' | 'week' | 'day' | 'shopping';
@@ -10,6 +11,8 @@ type View = 'catalog' | 'week' | 'day' | 'shopping';
 function App() {
   const [currentView, setCurrentView] = useState<View>('week');
   const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+
   
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
@@ -107,6 +110,14 @@ function App() {
               Meal Catalog
             </button>
           </div>
+
+          <button 
+            className={styles.settingsButton}
+            onClick={() => setShowSettings(true)}
+            aria-label="Open settings"
+          >
+            ⚙️
+          </button>
         </div>
       </nav>
 
@@ -122,6 +133,12 @@ function App() {
         {currentView === 'day' && <DayView />}
         {currentView === 'shopping' && <ShoppingListView />}
       </main>
+
+      {/* Settings Modal */}
+      <SettingsModal 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
     </div>
   );
 }
