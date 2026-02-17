@@ -13,6 +13,8 @@ function App() {
   
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
+  const touchStartY = useRef<number>(0);
+  const touchEndY = useRef<number>(0);
   
   const tabs: View[] = ['week', 'day', 'shopping', 'catalog'];
   
@@ -36,18 +38,31 @@ function App() {
   
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
   };
   
   const handleTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
+    touchEndY.current = e.touches[0].clientY;
   };
   
   const handleTouchEnd = () => {
-    const diff = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
+    const horizontalDiff = touchStartX.current - touchEndX.current;
+    const verticalDiff = touchStartY.current - touchEndY.current;
     
-    if (Math.abs(diff) > minSwipeDistance) {
-      if (diff > 0) {
+    const minSwipeDistance = 75; // Increased for more intentional swipes
+    const horizontalMovement = Math.abs(horizontalDiff);
+    const verticalMovement = Math.abs(verticalDiff);
+    
+    // Only trigger swipe if:
+    // 1. Horizontal movement is significant (>75px)
+    // 2. Horizontal movement is at least 2x greater than vertical (more horizontal than vertical)
+    const isHorizontalSwipe = 
+      horizontalMovement > minSwipeDistance && 
+      horizontalMovement > verticalMovement * 2;
+    
+    if (isHorizontalSwipe) {
+      if (horizontalDiff > 0) {
         // Swipe left - next tab
         navigateToTab('next');
       } else {
@@ -55,6 +70,7 @@ function App() {
         navigateToTab('prev');
       }
     }
+    // If not a horizontal swipe, do nothing (allow vertical scroll)
   };
 
 
