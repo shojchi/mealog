@@ -40,16 +40,37 @@ function App() {
   };
   
   const handleTouchStart = (e: React.TouchEvent) => {
+    // Check if the touch started on a modal or inside a modal
+    const target = e.target as HTMLElement;
+    const isModal = target.closest('[class*="overlay"]') || target.closest('[role="dialog"]');
+    
+    // Don't track swipes if touch starts on a modal
+    if (isModal) {
+      touchStartX.current = 0;
+      touchStartY.current = 0;
+      return;
+    }
+    
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
   };
   
   const handleTouchMove = (e: React.TouchEvent) => {
+    // Only track movement if we have a valid touch start
+    if (touchStartX.current === 0 && touchStartY.current === 0) {
+      return;
+    }
+    
     touchEndX.current = e.touches[0].clientX;
     touchEndY.current = e.touches[0].clientY;
   };
   
   const handleTouchEnd = () => {
+    // Don't process swipe if touch started on a modal
+    if (touchStartX.current === 0 && touchStartY.current === 0) {
+      return;
+    }
+    
     const horizontalDiff = touchStartX.current - touchEndX.current;
     const verticalDiff = touchStartY.current - touchEndY.current;
     
@@ -73,6 +94,12 @@ function App() {
         navigateToTab('prev');
       }
     }
+    
+    // Reset touch coordinates
+    touchStartX.current = 0;
+    touchStartY.current = 0;
+    touchEndX.current = 0;
+    touchEndY.current = 0;
     // If not a horizontal swipe, do nothing (allow vertical scroll)
   };
 
