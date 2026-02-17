@@ -8,8 +8,6 @@ import styles from './WeekView.module.css';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-type ViewMode = 'compact' | 'detailed';
-
 export function WeekView() {
   const { currentWeek, weeklyPlan, loading, setCurrentWeek, loadWeekPlan, removeMealFromDay, addMealToDay } = useWeekPlanStore();
   const [mealsCache, setMealsCache] = useState<Map<number, Meal>>(new Map());
@@ -18,7 +16,6 @@ export function WeekView() {
     dayIndex: null,
     dayName: '',
   });
-  const [viewMode, setViewMode] = useState<ViewMode>('detailed');
 
   useEffect(() => {
     loadWeekPlan();
@@ -96,30 +93,12 @@ export function WeekView() {
         </div>
 
         <div className={styles.headerControls}>
-          {/* View Mode Toggle */}
-          <div className={styles.viewToggle}>
-            <button
-              className={`${styles.toggleButton} ${viewMode === 'compact' ? styles.active : ''}`}
-              onClick={() => setViewMode('compact')}
-              title="Compact view"
-            >
-              ☰
-            </button>
-            <button
-              className={`${styles.toggleButton} ${viewMode === 'detailed' ? styles.active : ''}`}
-              onClick={() => setViewMode('detailed')}
-              title="Detailed view"
-            >
-              ⊞
-            </button>
-          </div>
-
           <div className={styles.navigation}>
             <button onClick={goToPreviousWeek} className={styles.navButton}>
               ← Previous
             </button>
             <button onClick={goToCurrentWeek} className={styles.navButton}>
-              Today
+              Current
             </button>
             <button onClick={goToNextWeek} className={styles.navButton}>
               Next →
@@ -129,7 +108,7 @@ export function WeekView() {
       </div>
 
       {/* Week Grid */}
-      <div className={`${styles.weekGrid} ${viewMode === 'compact' ? styles.compact : ''}`}>
+      <div className={`${styles.weekGrid}`}>
         {DAYS.map((dayName, dayIndex) => {
           const dayPlan = weeklyPlan?.days[dayIndex];
           const dayDate = weeklyPlan ? format(dayPlan!.date, 'MMM d') : '';
@@ -160,14 +139,6 @@ export function WeekView() {
                         />
                         <div className={styles.mealInfo}>
                           <h4 className={styles.mealName}>{meal.name}</h4>
-                          {viewMode === 'detailed' && (
-                            <>
-                              <p className={styles.mealType}>{meal.mealType}</p>
-                              <div className={styles.mealNutrition}>
-                                {meal.nutrition.calories} cal
-                              </div>
-                            </>
-                          )}
                         </div>
                         <button
                           onClick={() => handleRemoveMeal(dayIndex, mealIndex)}
