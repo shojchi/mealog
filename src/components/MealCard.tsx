@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Meal } from '../types';
 import styles from './MealCard.module.css';
 
@@ -8,6 +9,8 @@ interface MealCardProps {
 }
 
 export function MealCard({ meal, onClick, onEdit }: MealCardProps) {
+  const { t } = useTranslation();
+
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
     onEdit?.();
@@ -26,9 +29,9 @@ export function MealCard({ meal, onClick, onEdit }: MealCardProps) {
           <button 
             className={styles.editButton}
             onClick={handleEditClick}
-            aria-label="Edit meal"
+            aria-label={t('common.edit')}
           >
-            ✏️ Edit
+            ✏️ {t('common.edit')}
           </button>
         )}
       </div>
@@ -50,10 +53,10 @@ export function MealCard({ meal, onClick, onEdit }: MealCardProps) {
         {/* Nutrition Summary */}
         <div className={styles.nutrition}>
           <span className={styles.nutritionItem}>
-            <strong>{meal.nutrition.calories}</strong> cal
+            <strong>{meal.nutrition.calories}</strong> {t('common.calories')}
           </span>
           <span className={styles.nutritionItem}>
-            <strong>{meal.nutrition.protein}g</strong> protein
+            <strong>{meal.nutrition.protein}g</strong> {t('common.protein')}
           </span>
           <span className={styles.nutritionItem}>
             <strong>{meal.nutrition.carbs}g</strong> carbs

@@ -1,4 +1,5 @@
 import { useState, useEffect, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal, Ingredient, MealType, MealLabel, MeasurementUnit, IngredientCategory } from '../types';
 import styles from './MealFormModal.module.css';
@@ -11,6 +12,7 @@ interface MealFormModalProps {
 }
 
 export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealFormModalProps) {
+  const { t } = useTranslation();
   // Basic info
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -101,17 +103,17 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
     
     // Validation
     if (!trimmed) {
-      alert('Label cannot be empty');
+      alert(t('mealForm.validation.emptyLabel', 'Label cannot be empty'));
       return;
     }
     
     if (trimmed.length > 20) {
-      alert('Label must be 20 characters or less');
+      alert(t('mealForm.validation.labelLength', 'Label must be 20 characters or less'));
       return;
     }
     
     if (customLabels.includes(trimmed)) {
-      alert('This label already exists');
+      alert(t('mealForm.validation.labelExists', 'This label already exists'));
       return;
     }
     
@@ -132,19 +134,19 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
 
     // Validation
     if (!name.trim()) {
-      setError('Meal name is required');
+      setError(t('mealForm.validation.nameRequired', 'Meal name is required'));
       return;
     }
     if (!imageUrl.trim()) {
-      setError('Image URL is required');
+      setError(t('mealForm.validation.imageRequired', 'Image URL is required'));
       return;
     }
     if (calories <= 0) {
-      setError('Calories must be greater than 0');
+      setError(t('mealForm.validation.caloriesRequired', 'Calories must be greater than 0'));
       return;
     }
     if (ingredients.some(ing => !ing.name.trim())) {
-      setError('All ingredients must have a name');
+      setError(t('mealForm.validation.ingredientsRequired', 'All ingredients must have a name'));
       return;
     }
 
@@ -192,7 +194,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
       onClose();
     } catch (err) {
       console.error(`Failed to ${editMeal ? 'update' : 'create'} meal:`, err);
-      setError(`Failed to ${editMeal ? 'update' : 'create'} meal. Please try again.`);
+      setError(editMeal ? t('mealForm.validation.updateFailed', 'Failed to update meal') : t('mealForm.validation.createFailed', 'Failed to create meal'));
     }
   };
 
@@ -222,55 +224,55 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
     <div className={styles.overlay} onClick={handleClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2>{editMeal ? 'Edit Meal' : 'Create New Meal'}</h2>
+          <h2>{editMeal ? t('mealForm.editTitle') : t('mealForm.createTitle')}</h2>
           <button onClick={handleClose} className={styles.closeButton}>×</button>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           {/* Basic Info Section */}
           <section className={styles.section}>
-            <h3>Basic Information</h3>
+            <h3>{t('mealForm.basicInfo')}</h3>
             
             <div className={styles.inputGroup}>
-              <label htmlFor="name">Meal Name *</label>
+              <label htmlFor="name">{t('mealForm.mealName')} *</label>
               <input
                 id="name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., Avocado Toast"
+                placeholder={t('mealForm.placeholders.name', 'e.g., Avocado Toast')}
                 required
               />
             </div>
 
             <div className={styles.inputGroup}>
-              <label htmlFor="description">Description</label>
+              <label htmlFor="description">{t('mealForm.description')}</label>
               <textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Brief description of the meal"
+                placeholder={t('mealForm.placeholders.description', 'Brief description of the meal')}
                 rows={3}
               />
             </div>
 
             <div className={styles.row}>
               <div className={styles.inputGroup}>
-                <label htmlFor="mealType">Meal Type *</label>
+                <label htmlFor="mealType">{t('mealForm.mealType')} *</label>
                 <select
                   id="mealType"
                   value={mealType}
                   onChange={(e) => setMealType(e.target.value as MealType)}
                 >
-                  <option value="breakfast">Breakfast</option>
-                  <option value="lunch">Lunch</option>
-                  <option value="dinner">Dinner</option>
-                  <option value="snack">Snack</option>
+                  <option value="breakfast">{t('catalog.filters.breakfast')}</option>
+                  <option value="lunch">{t('catalog.filters.lunch')}</option>
+                  <option value="dinner">{t('catalog.filters.dinner')}</option>
+                  <option value="snack">{t('catalog.filters.snack')}</option>
                 </select>
               </div>
 
               <div className={styles.inputGroup}>
-                <label htmlFor="servings">Servings *</label>
+                <label htmlFor="servings">{t('mealForm.servings')} *</label>
                 <input
                   id="servings"
                   type="number"
@@ -284,9 +286,9 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
 
           {/* Image Section */}
           <section className={styles.section}>
-            <h3>Image</h3>
+            <h3>{t('mealForm.image')}</h3>
             <div className={styles.inputGroup}>
-              <label htmlFor="imageUrl">Image URL *</label>
+              <label htmlFor="imageUrl">{t('mealForm.imageUrl')} *</label>
               <input
                 id="imageUrl"
                 type="url"
@@ -305,18 +307,18 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
 
           {/* Ingredients Section */}
           <section className={styles.section}>
-            <h3>Ingredients</h3>
+            <h3>{t('mealForm.ingredients')}</h3>
             {ingredients.map((ingredient, index) => (
               <div key={index} className={styles.ingredientRow}>
                 <input
                   type="text"
-                  placeholder="Name"
+                  placeholder={t('mealForm.placeholders.ingredientName', 'Name')}
                   value={ingredient.name}
                   onChange={(e) => updateIngredient(index, 'name', e.target.value)}
                 />
                 <input
                   type="number"
-                  placeholder="Qty"
+                  placeholder={t('mealForm.placeholders.quantity', 'Qty')}
                   min="0"
                   step="0.1"
                   value={ingredient.quantity}
@@ -339,12 +341,12 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   value={ingredient.category}
                   onChange={(e) => updateIngredient(index, 'category', e.target.value as IngredientCategory)}
                 >
-                  <option value="dairy">Dairy</option>
-                  <option value="produce">Produce</option>
-                  <option value="meat">Meat</option>
-                  <option value="grains">Grains</option>
-                  <option value="spices">Spices</option>
-                  <option value="other">Other</option>
+                  <option value="dairy">{t('shoppingList.categories.dairy')}</option>
+                  <option value="produce">{t('shoppingList.categories.produce')}</option>
+                  <option value="meat">{t('shoppingList.categories.meat')}</option>
+                  <option value="grains">{t('shoppingList.categories.grains')}</option>
+                  <option value="spices">{t('shoppingList.categories.spices')}</option>
+                  <option value="other">{t('shoppingList.categories.other')}</option>
                 </select>
                 {ingredients.length > 1 && (
                   <button
@@ -358,16 +360,16 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
               </div>
             ))}
             <button type="button" onClick={addIngredient} className={styles.addButton}>
-              + Add Ingredient
+              + {t('mealForm.buttons.addIngredient')}
             </button>
           </section>
 
           {/* Nutrition Section */}
           <section className={styles.section}>
-            <h3>Nutrition Facts (per serving)</h3>
+            <h3>{t('mealForm.nutritionFacts')}</h3>
             <div className={styles.nutritionGrid}>
               <div className={styles.inputGroup}>
-                <label htmlFor="calories">Calories *</label>
+                <label htmlFor="calories">{t('common.calories')} *</label>
                 <input
                   id="calories"
                   type="number"
@@ -378,7 +380,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label htmlFor="protein">Protein (g)</label>
+                <label htmlFor="protein">{t('common.protein')} (g)</label>
                 <input
                   id="protein"
                   type="number"
@@ -389,7 +391,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label htmlFor="carbs">Carbs (g)</label>
+                <label htmlFor="carbs">{t('common.carbs')} (g)</label>
                 <input
                   id="carbs"
                   type="number"
@@ -400,7 +402,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label htmlFor="fat">Fat (g)</label>
+                <label htmlFor="fat">{t('common.fat')} (g)</label>
                 <input
                   id="fat"
                   type="number"
@@ -415,7 +417,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
 
           {/* Labels Section */}
           <section className={styles.section}>
-            <h3>Labels (optional)</h3>
+            <h3>{t('mealForm.labels.title')} ({t('mealForm.labels.optional')})</h3>
             <div className={styles.labelsGrid}>
               {/* Default labels */}
               {(['quick', 'high-protein', 'low-carb', 'vegetarian', 'vegan', 'gluten-free', 'dairy-free'] as MealLabel[]).map((label) => (
@@ -446,7 +448,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                 type="button"
                 className={styles.addLabelButton}
                 onClick={() => setShowLabelModal(true)}
-                title="Add custom label"
+                title={t('mealForm.buttons.addLabel')}
               >
                 +
               </button>
@@ -457,25 +459,25 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
           {showLabelModal && (
             <div className={styles.labelModalOverlay} onClick={() => setShowLabelModal(false)}>
               <div className={styles.labelModalContent} onClick={(e) => e.stopPropagation()}>
-                <h4>Add Custom Label</h4>
+                <h4>{t('mealForm.labels.addCustom')}</h4>
                 <input
                   type="text"
                   value={newLabelInput}
                   onChange={(e) => setNewLabelInput(e.target.value)}
-                  placeholder="Enter label (max 20 chars)"
+                  placeholder={t('mealForm.labels.placeholder', 'Enter label (max 20 chars)')}
                   maxLength={20}
                   autoFocus
                   onKeyPress={(e) => e.key === 'Enter' && handleAddCustomLabel()}
                 />
                 <div className={styles.labelModalButtons}>
                   <button type="button" onClick={handleAddCustomLabel}>
-                    Add
+                    {t('common.add')}
                   </button>
                   <button type="button" onClick={() => {
                     setNewLabelInput('');
                     setShowLabelModal(false);
                   }}>
-                    Cancel
+                    {t('common.cancel')}
                   </button>
                 </div>
               </div>
@@ -484,14 +486,14 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
 
           {/* Recipe Section */}
           <section className={styles.section}>
-            <h3>Recipe Instructions</h3>
+            <h3>{t('mealForm.recipe.title')}</h3>
             <div className={styles.recipeToggle}>
               <button
                 type="button"
                 className={recipeType === 'text' ? styles.active : ''}
                 onClick={() => setRecipeType('text')}
               >
-                Text
+                {t('mealForm.recipe.text')}
               </button>
               <button
                 type="button"
@@ -506,7 +508,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                 <textarea
                   value={recipeContent}
                   onChange={(e) => setRecipeContent(e.target.value)}
-                  placeholder="Enter cooking instructions..."
+                  placeholder={t('mealForm.recipe.placeholder', 'Enter cooking instructions...')}
                   rows={5}
                 />
               ) : (
@@ -526,10 +528,10 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
           {/* Form Actions */}
           <div className={styles.actions}>
             <button type="button" onClick={handleClose} className={styles.cancelButton}>
-              Cancel
+              {t('common.cancel')}
             </button>
             <button type="submit" className={styles.submitButton}>
-              {editMeal ? 'Save Changes' : 'Create Meal'}
+              {editMeal ? t('common.save') : t('common.create')}
             </button>
           </div>
         </form>

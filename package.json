@@ -12,8 +12,10 @@
   "dependencies": {
     "date-fns": "^4.1.0",
     "dexie": "^4.3.0",
+    "i18next": "^25.8.10",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-i18next": "^16.5.4",
     "vite-plugin-pwa": "^1.2.0",
     "zustand": "^5.0.11"
   },

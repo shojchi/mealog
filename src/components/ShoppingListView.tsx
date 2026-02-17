@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useShoppingListStore } from '../store/shoppingListStore';
 import type { IngredientCategory, ShoppingListItem } from '../types';
 import styles from './ShoppingListView.module.css';
@@ -12,17 +13,18 @@ const CATEGORY_ORDER: IngredientCategory[] = [
   'other',
 ];
 
-const CATEGORY_LABELS: Record<IngredientCategory, string> = {
-  meat: 'Proteins',
-  produce: 'Vegetables & Fruits',
-  dairy: 'Dairy',
-  grains: 'Grains & Carbs',
-  spices: 'Spices & Seasonings',
-  other: 'Other',
-};
-
 export function ShoppingListView() {
+  const { t } = useTranslation();
   const { shoppingList, loading, generateFromWeekPlan, toggleItemChecked, clearCompleted, loadShoppingList } = useShoppingListStore();
+
+  const CATEGORY_LABELS: Record<IngredientCategory, string> = {
+    meat: t('shoppingList.categories.meat', 'Proteins'),
+    produce: t('shoppingList.categories.produce', 'Vegetables & Fruits'),
+    dairy: t('shoppingList.categories.dairy', 'Dairy'),
+    grains: t('shoppingList.categories.grains', 'Grains & Carbs'),
+    spices: t('shoppingList.categories.spices', 'Spices & Seasonings'),
+    other: t('shoppingList.categories.other', 'Other'),
+  };
 
   useEffect(() => {
     loadShoppingList();
@@ -53,7 +55,7 @@ export function ShoppingListView() {
   const completedItems = shoppingList?.items.filter(item => item.purchased).length || 0;
 
   if (loading) {
-    return <div className={styles.loading}>Loading shopping list...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   return (
@@ -61,7 +63,7 @@ export function ShoppingListView() {
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>Shopping List</h1>
+          <h1 className={styles.title}>{t('shoppingList.title')}</h1>
           {shoppingList && (
             <p className={styles.stats}>
               {completedItems} of {totalItems} items checked
@@ -75,7 +77,7 @@ export function ShoppingListView() {
             className={styles.generateButton}
             disabled={loading}
           >
-            {shoppingList ? '↻ Regenerate' : '+ Generate from Week Plan'}
+            {shoppingList ? '↻ ' + t('shoppingList.regenerate', 'Regenerate') : '+ ' + t('shoppingList.generateFromWeekPlan')}
           </button>
           
           {shoppingList && completedItems > 0 && (
@@ -83,7 +85,7 @@ export function ShoppingListView() {
               onClick={handleClearCompleted}
               className={styles.clearButton}
             >
-              Clear Completed
+              {t('shoppingList.clearCompleted', 'Clear Completed')}
             </button>
           )}
         </div>
@@ -93,10 +95,10 @@ export function ShoppingListView() {
       {!shoppingList ? (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>🛒</div>
-          <h2>No Shopping List Yet</h2>
-          <p>Generate a shopping list from your weekly meal plan to get started.</p>
+          <h2>{t('shoppingList.noListYet')}</h2>
+          <p>{t('shoppingList.emptyDescription')}</p>
           <button onClick={handleGenerate} className={styles.emptyButton}>
-            Generate Shopping List
+            {t('shoppingList.generateFromWeekPlan')}
           </button>
         </div>
       ) : (
@@ -132,10 +134,10 @@ export function ShoppingListView() {
             </div>
           ))}
 
-          {totalItems === 0 && (
+          {totalItems > 0 && totalItems === completedItems && (
             <div className={styles.allComplete}>
               <div className={styles.completeIcon}>✓</div>
-              <p>All items checked! You're ready to shop.</p>
+              <p>{t('shoppingList.allChecked', "All items checked! You're ready to shop.")}</p>
             </div>
           )}
         </div>

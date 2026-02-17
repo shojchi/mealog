@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { format, addDays, subDays, startOfWeek } from 'date-fns';
+import { addDays, subDays, startOfWeek } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { useWeekPlanStore } from '../store/weekPlanStore';
 import { db } from '../db';
 import type { Meal, DayPlan, Nutrition } from '../types';
@@ -7,8 +8,26 @@ import { MealSelectorModal } from './MealSelectorModal';
 import styles from './DayView.module.css';
 
 export function DayView() {
+  const { t } = useTranslation();
   const { weeklyPlan, loadWeekPlan, removeMealFromDay, addMealToDay } = useWeekPlanStore();
   const [currentDate, setCurrentDate] = useState(new Date());
+  
+  // Helper to get translated day names
+  const getDayName = (date: Date) => {
+    const dayIndex = date.getDay(); // 0 = Sunday, 1 = Monday
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    return t(`days.${days[dayIndex]}`);
+  };
+
+  // Helper to get translated month names
+  const getFormattedDate = (date: Date) => {
+    const day = date.getDate();
+    const monthIndex = date.getMonth();
+    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    const month = t(`months.short.${months[monthIndex]}`);
+    return `${month} ${day}, ${date.getFullYear()}`;
+  };
+
   const [dayPlan, setDayPlan] = useState<DayPlan | null>(null);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [dailyNutrition, setDailyNutrition] = useState<Nutrition>({
@@ -33,12 +52,19 @@ export function DayView() {
     
     if (dayIndex >= 0 && dayIndex < 7) {
       setDayPlan(weeklyPlan.days[dayIndex]);
+    } else {
+      setDayPlan(null);
     }
   }, [weeklyPlan, currentDate]);
 
   // Load meal details and calculate nutrition
   useEffect(() => {
-    if (!dayPlan) return;
+    // If no day plan, clear meals and nutrition
+    if (!dayPlan) {
+      setMeals([]);
+      setDailyNutrition({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+      return;
+    }
 
     const loadMeals = async () => {
       const mealIds = dayPlan.meals.map(m => m.mealId);
@@ -82,13 +108,13 @@ export function DayView() {
     const monday = startOfWeek(currentDate, { weekStartsOn: 1 });
     const dayIndex = Math.floor((currentDate.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (confirm('Remove this meal from your plan?')) {
+    if (confirm(t('common.delete') + '?')) {
       removeMealFromDay(dayIndex, mealIndex);
     }
   };
 
   const handleOpenModal = () => {
-    setModalState({ isOpen: true, dayName: format(currentDate, 'EEEE') });
+    setModalState({ isOpen: true, dayName: getDayName(currentDate) });
   };
 
   const handleCloseModal = () => {
@@ -101,7 +127,12 @@ export function DayView() {
     const monday = startOfWeek(currentDate, { weekStartsOn: 1 });
     const dayIndex = Math.floor((currentDate.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24));
     
-    await addMealToDay(dayIndex, mealId);
+    // Check if within current week
+    if (dayIndex >= 0 && dayIndex < 7) {
+      await addMealToDay(dayIndex, mealId);
+    } else {
+      alert("Please navigate to the current week to add meals.");
+    }
   };
 
   // Nutrition goals (example values)
@@ -119,19 +150,19 @@ export function DayView() {
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.dateInfo}>
-          <h1 className={styles.dayName}>{format(currentDate, 'EEEE')}</h1>
-          <p className={styles.date}>{format(currentDate, 'MMMM d, yyyy')}</p>
+          <h1 className={styles.dayName}>{getDayName(currentDate)}</h1>
+          <p className={styles.date}>{getFormattedDate(currentDate)}</p>
         </div>
 
         <div className={styles.navigation}>
           <button onClick={goToPreviousDay} className={styles.navButton}>
-            ← Previous
+            ← {t('weekView.previous')}
           </button>
           <button onClick={goToToday} className={styles.navButton}>
-            Today
+            {t('dayView.today')}
           </button>
           <button onClick={goToNextDay} className={styles.navButton}>
-            Next →
+            {t('weekView.next')} →
           </button>
         </div>
       </div>
@@ -139,13 +170,13 @@ export function DayView() {
       <div className={styles.content}>
         {/* Meals List */}
         <div className={styles.mealsSection}>
-          <h2 className={styles.sectionTitle}>Meals</h2>
+          <h2 className={styles.sectionTitle}>{t('nav.meals')}</h2>
           
           {meals.length === 0 ? (
             <div className={styles.emptyState}>
-              <p>No meals planned for this day</p>
+              <p>{t('weekView.noMealsPlanned')}</p>
               <button onClick={handleOpenModal} className={styles.addButton}>
-                + Add First Meal
+                + {t('dayView.addFirstMeal')}
               </button>
             </div>
           ) : (
@@ -161,29 +192,30 @@ export function DayView() {
                   <div className={styles.mealDetails}>
                     <div className={styles.mealHeader}>
                       <h3 className={styles.mealName}>{meal.name}</h3>
-                      <span className={styles.mealType}>{meal.mealType}</span>
+                      <span className={styles.mealType}>{t(`catalog.filters.${meal.mealType}`, meal.mealType)}</span>
                     </div>
                     
                     <p className={styles.mealDescription}>{meal.description}</p>
                     
                     <div className={styles.mealNutrition}>
                       <div className={styles.nutrientBadge}>
-                        <strong>{meal.nutrition.calories}</strong> cal
+                        <strong>{meal.nutrition.calories}</strong> {t('common.calories')}
                       </div>
                       <div className={styles.nutrientBadge}>
-                        <strong>{meal.nutrition.protein}g</strong> protein
+                        <strong>{meal.nutrition.protein}g</strong> {t('common.protein')}
                       </div>
                       <div className={styles.nutrientBadge}>
-                        <strong>{meal.nutrition.carbs}g</strong> carbs
+                        <strong>{meal.nutrition.carbs}g</strong> {t('common.carbs')}
                       </div>
                       <div className={styles.nutrientBadge}>
-                        <strong>{meal.nutrition.fat}g</strong> fat
+                        <strong>{meal.nutrition.fat}g</strong> {t('common.fat')}
                       </div>
                     </div>
 
+
                     <div className={styles.labels}>
                       {meal.labels.slice(0, 4).map(label => (
-                        <span key={label} className={styles.label}>{label}</span>
+                        <span key={label} className={styles.label}>{label.replace('-', ' ')}</span>
                       ))}
                     </div>
                   </div>
@@ -191,7 +223,7 @@ export function DayView() {
                   <button
                     onClick={() => handleRemoveMeal(index)}
                     className={styles.removeButton}
-                    title="Remove meal"
+                    title={t('common.remove')}
                   >
                     ×
                   </button>
@@ -199,7 +231,7 @@ export function DayView() {
               ))}
 
               <button onClick={handleOpenModal} className={styles.addAnotherButton}>
-                + Add Another Meal
+                + {t('dayView.addAnotherMeal', 'Add Another Meal')}
               </button>
             </div>
           )}
@@ -207,13 +239,13 @@ export function DayView() {
 
         {/* Nutrition Sidebar */}
         <div className={styles.nutritionSidebar}>
-          <h2 className={styles.sectionTitle}>Daily Nutrition</h2>
+          <h2 className={styles.sectionTitle}>{t('dayView.dailyNutrition', 'Daily Nutrition')}</h2>
           
           <div className={styles.nutritionStats}>
             {/* Calories */}
             <div className={styles.statCard}>
               <div className={styles.statHeader}>
-                <span className={styles.statLabel}>Calories</span>
+                <span className={styles.statLabel}>{t('common.calories')}</span>
                 <span className={styles.statValue}>
                   {dailyNutrition.calories} / {goals.calories}
                 </span>
@@ -229,7 +261,7 @@ export function DayView() {
             {/* Protein */}
             <div className={styles.statCard}>
               <div className={styles.statHeader}>
-                <span className={styles.statLabel}>Protein</span>
+                <span className={styles.statLabel}>{t('common.protein')}</span>
                 <span className={styles.statValue}>
                   {dailyNutrition.protein}g / {goals.protein}g
                 </span>
@@ -245,7 +277,7 @@ export function DayView() {
             {/* Carbs */}
             <div className={styles.statCard}>
               <div className={styles.statHeader}>
-                <span className={styles.statLabel}>Carbs</span>
+                <span className={styles.statLabel}>{t('common.carbs')}</span>
                 <span className={styles.statValue}>
                   {dailyNutrition.carbs}g / {goals.carbs}g
                 </span>
@@ -261,7 +293,7 @@ export function DayView() {
             {/* Fat */}
             <div className={styles.statCard}>
               <div className={styles.statHeader}>
-                <span className={styles.statLabel}>Fat</span>
+                <span className={styles.statLabel}>{t('common.fat')}</span>
                 <span className={styles.statValue}>
                   {dailyNutrition.fat}g / {goals.fat}g
                 </span>
@@ -277,12 +309,12 @@ export function DayView() {
 
           {/* Summary */}
           <div className={styles.summary}>
-            <h3 className={styles.summaryTitle}>Summary</h3>
+            <h3 className={styles.summaryTitle}>{t('dayView.summary', 'Summary')}</h3>
             <p className={styles.summaryText}>
-              {meals.length} {meals.length === 1 ? 'meal' : 'meals'} planned
+              {meals.length} {meals.length === 1 ? t('dayView.mealPlanned', 'meal planned') : t('dayView.mealsPlanned', 'meals planned')}
             </p>
             <p className={styles.summaryText}>
-              {Math.round(getPercentage(dailyNutrition.calories, goals.calories))}% of daily calories
+              {Math.round(getPercentage(dailyNutrition.calories, goals.calories))}% {t('dayView.dailyCalories', 'of daily calories')}
             </p>
           </div>
         </div>

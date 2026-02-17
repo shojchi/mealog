@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Meal } from '../types';
 import styles from './RecipeModal.module.css';
 
@@ -8,6 +9,8 @@ interface RecipeModalProps {
 }
 
 export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
+  const { t } = useTranslation();
+
   if (!isOpen || !meal) return null;
 
   return (
@@ -28,10 +31,10 @@ export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
 
           {/* Recipe Instructions */}
           <section className={styles.section}>
-            <h3>📝 Instructions</h3>
+            <h3>📝 {t('recipe.instructions')}</h3>
             {meal.recipe.type === 'url' ? (
               <div className={styles.recipeUrl}>
-                <p>View full recipe at:</p>
+                <p>{t('recipe.viewFull')}:</p>
                 <a 
                   href={meal.recipe.content} 
                   target="_blank" 
@@ -52,7 +55,7 @@ export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
 
           {/* Ingredients */}
           <section className={styles.section}>
-            <h3>🥗 Ingredients</h3>
+            <h3>🥗 {t('mealForm.ingredients')}</h3>
             <ul className={styles.ingredientsList}>
               {meal.ingredients.map((ingredient, index) => (
                 <li key={index}>
@@ -67,22 +70,22 @@ export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
 
           {/* Nutrition Facts */}
           <section className={styles.section}>
-            <h3>📊 Nutrition Facts</h3>
+            <h3>📊 {t('mealForm.nutritionFacts')}</h3>
             <div className={styles.nutritionGrid}>
               <div className={styles.nutritionItem}>
-                <span className={styles.nutritionLabel}>Calories</span>
+                <span className={styles.nutritionLabel}>{t('common.calories')}</span>
                 <span className={styles.nutritionValue}>{meal.nutrition.calories}</span>
               </div>
               <div className={styles.nutritionItem}>
-                <span className={styles.nutritionLabel}>Protein</span>
+                <span className={styles.nutritionLabel}>{t('common.protein')}</span>
                 <span className={styles.nutritionValue}>{meal.nutrition.protein}g</span>
               </div>
               <div className={styles.nutritionItem}>
-                <span className={styles.nutritionLabel}>Carbs</span>
+                <span className={styles.nutritionLabel}>{t('common.carbs')}</span>
                 <span className={styles.nutritionValue}>{meal.nutrition.carbs}g</span>
               </div>
               <div className={styles.nutritionItem}>
-                <span className={styles.nutritionLabel}>Fat</span>
+                <span className={styles.nutritionLabel}>{t('common.fat')}</span>
                 <span className={styles.nutritionValue}>{meal.nutrition.fat}g</span>
               </div>
             </div>
@@ -90,22 +93,22 @@ export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
 
           {/* Meal Info */}
           <section className={styles.section}>
-            <h3>ℹ️ Details</h3>
+            <h3>ℹ️ {t('recipe.details')}</h3>
             <div className={styles.details}>
               <div className={styles.detailItem}>
-                <strong>Type:</strong> {meal.mealType.charAt(0).toUpperCase() + meal.mealType.slice(1)}
+                <strong>{t('recipe.type')}:</strong> {t(`catalog.filters.${meal.mealType}`, meal.mealType)}
               </div>
               <div className={styles.detailItem}>
-                <strong>Servings:</strong> {meal.servings}
+                <strong>{t('mealForm.servings')}:</strong> {meal.servings}
               </div>
               {meal.totalPrice && (
                 <div className={styles.detailItem}>
-                  <strong>Cost:</strong> ${meal.totalPrice.toFixed(2)}
+                  <strong>{t('recipe.cost')}:</strong> ${meal.totalPrice.toFixed(2)}
                 </div>
               )}
               {meal.labels.length > 0 && (
                 <div className={styles.detailItem}>
-                  <strong>Labels:</strong>
+                  <strong>{t('mealForm.labels.title')}:</strong>
                   <div className={styles.labels}>
                     {meal.labels.map((label) => (
                       <span key={label} className={styles.label}>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal, MealType } from '../types';
 import styles from './MealSelectorModal.module.css';
@@ -11,6 +12,7 @@ interface MealSelectorModalProps {
 }
 
 export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: MealSelectorModalProps) {
+  const { t } = useTranslation();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [filter, setFilter] = useState<MealType | 'all'>('all');
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,7 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Add Meal to  {dayName}</h2>
+          <h2 className={styles.title}>{t('mealSelector.addMealTo')} {dayName}</h2>
           <button className={styles.closeButton} onClick={onClose}>
             ×
           </button>
@@ -60,11 +62,11 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
         {/* Filters */}
         <div className={styles.filters}>
           {[
-            { value: 'all', label: 'All' },
-            { value: 'breakfast', label: 'Breakfast' },
-            { value: 'lunch', label: 'Lunch' },
-            { value: 'dinner', label: 'Dinner' },
-            { value: 'snack', label: 'Snacks' },
+            { value: 'all', label: t('catalog.filters.all', 'All') },
+            { value: 'breakfast', label: t('catalog.filters.breakfast', 'Breakfast') },
+            { value: 'lunch', label: t('catalog.filters.lunch', 'Lunch') },
+            { value: 'dinner', label: t('catalog.filters.dinner', 'Dinner') },
+            { value: 'snack', label: t('catalog.filters.snack', 'Snacks') },
           ].map(option => (
             <button
               key={option.value}
@@ -81,7 +83,7 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
           {loading ? (
             <div className={styles.loading}>Loading...</div>
           ) : meals.length === 0 ? (
-            <div className={styles.empty}>No meals found</div>
+            <div className={styles.empty}>{t('catalog.noMealsFound', 'No meals found')}</div>
           ) : (
             meals.map(meal => (
               <div
@@ -96,9 +98,9 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
                 />
                 <div className={styles.mealInfo}>
                   <h3 className={styles.mealName}>{meal.name}</h3>
-                  <p className={styles.mealType}>{meal.mealType}</p>
+                  <p className={styles.mealType}>{t(`catalog.filters.${meal.mealType}`, meal.mealType)}</p>
                   <div className={styles.mealNutrition}>
-                    {meal.nutrition.calories} cal • {meal.nutrition.protein}g protein
+                    {meal.nutrition.calories} {t('common.caloriesAbbr', 'cal')} • {meal.nutrition.protein}g {t('common.protein')}
                   </div>
                 </div>
               </div>

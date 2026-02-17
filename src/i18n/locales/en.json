@@ -1,0 +1,163 @@
+{
+  "app": {
+    "name": "Mealog"
+  },
+  "common": {
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "create": "Create",
+    "delete": "Delete",
+    "remove": "Remove",
+    "close": "Close",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "caloriesAbbr": "cal"
+  },
+  "nav": {
+    "weekPlan": "Week Plan",
+    "dayView": "Day View",
+    "shoppingList": "Shopping List",
+    "meals": "Meals",
+    "mealCatalog": "Meal Catalog"
+  },
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
+  },
+  "months": {
+    "short": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "appearance": "Appearance",
+    "userProfile": "User Profile",
+    "notifications": "Notifications",
+    "dataManagement": "Data Management",
+    "close": "Close"
+  },
+  "dayView": {
+    "today": "Today",
+    "addFirstMeal": "Add first meal",
+    "addAnotherMeal": "Add Another Meal",
+    "dailyNutrition": "Daily Nutrition",
+    "summary": "Summary",
+    "mealPlanned": "meal planned",
+    "mealsPlanned": "meals planned",
+    "dailyCalories": "of daily calories"
+  },
+  "weekView": {
+    "title": "Weekly Meal Plan",
+    "previous": "Previous",
+    "next": "Next",
+    "current": "Current",
+    "noMealsPlanned": "No meals planned"
+  },
+  "shoppingList": {
+    "title": "Shopping List",
+    "generateFromWeekPlan": "Generate from Week Plan",
+    "regenerate": "Regenerate",
+    "clearCompleted": "Clear Completed",
+    "noListYet": "No list yet",
+    "emptyDescription": "Generate a shopping list from your weekly meal plan to get started.",
+    "allChecked": "All items checked! You're ready to shop.",
+    "categories": {
+      "dairy": "Dairy & Cheese",
+      "produce": "Vegetables & Fruits",
+      "meat": "Meat & Fish",
+      "grains": "Grains & Bread",
+      "spices": "Spices & Oils",
+      "other": "Other"
+    }
+  },
+  "catalog": {
+    "title": "Meal Catalog",
+    "mealsAvailable": "meals available",
+    "createNew": "Create New Meal",
+    "noMealsFound": "No meals found",
+    "filters": {
+      "all": "All Meals",
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "snack": "Snacks"
+    }
+  },
+  "mealForm": {
+    "createTitle": "Create New Meal",
+    "editTitle": "Edit Meal",
+    "basicInfo": "Basic Information",
+    "mealName": "Meal Name",
+    "description": "Description",
+    "mealType": "Meal Type",
+    "servings": "Servings",
+    "image": "Image",
+    "imageUrl": "Image URL",
+    "ingredients": "Ingredients",
+    "nutritionFacts": "Nutrition Facts (per serving)",
+    "labels": {
+      "title": "Labels",
+      "optional": "optional",
+      "addCustom": "Add Custom Label",
+      "placeholder": "Enter label (max 20 chars)"
+    },
+    "recipe": {
+      "title": "Recipe Instructions",
+      "text": "Text",
+      "placeholder": "Enter cooking instructions..."
+    },
+    "placeholders": {
+      "name": "e.g., Avocado Toast",
+      "description": "Brief description of the meal",
+      "ingredientName": "Name",
+      "quantity": "Qty"
+    },
+    "buttons": {
+      "addIngredient": "Add Ingredient",
+      "addLabel": "Add custom label"
+    },
+    "validation": {
+      "emptyLabel": "Label cannot be empty",
+      "labelLength": "Label must be 20 characters or less",
+      "labelExists": "This label already exists",
+      "nameRequired": "Meal name is required",
+      "imageRequired": "Image URL is required",
+      "caloriesRequired": "Calories must be greater than 0",
+      "ingredientsRequired": "All ingredients must have a name",
+      "createFailed": "Failed to create meal",
+      "updateFailed": "Failed to update meal"
+    }
+  },
+  "recipe": {
+    "instructions": "Instructions",
+    "viewFull": "View full recipe at",
+    "details": "Details",
+    "type": "Type",
+    "cost": "Cost"
+  },
+  "mealSelector": {
+    "addMealTo": "Add Meal to"
+  }
+}

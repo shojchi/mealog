@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import './i18n/config';
 import { MealCatalog } from './components/MealCatalog';
 import { WeekView } from './components/WeekView';
 import { DayView } from './components/DayView';
@@ -9,10 +11,10 @@ import styles from './App.module.css';
 type View = 'catalog' | 'week' | 'day' | 'shopping';
 
 function App() {
+  const { t } = useTranslation();
   const [currentView, setCurrentView] = useState<View>('week');
   const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
   const [showSettings, setShowSettings] = useState(false);
-
   
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
@@ -109,32 +111,32 @@ function App() {
       {/* Top Navigation */}
       <nav className={styles.nav}>
         <div className={styles.navContent}>
-          <h1 className={styles.logo}>🍽️ Mealog</h1>
+          <h1 className={styles.logo}>{t('app.name')}</h1>
           
           <div className={styles.navButtons}>
             <button
               className={`${styles.navButton} ${currentView === 'week' ? styles.active : ''}`}
               onClick={() => setCurrentView('week')}
             >
-              Week Plan
+              {t('nav.weekPlan')}
             </button>
             <button
               className={`${styles.navButton} ${currentView === 'day' ? styles.active : ''}`}
               onClick={() => setCurrentView('day')}
             >
-              Day View
+              {t('nav.dayView')}
             </button>
             <button
               className={`${styles.navButton} ${currentView === 'shopping' ? styles.active : ''}`}
               onClick={() => setCurrentView('shopping')}
             >
-              Shopping List
+              {t('nav.shoppingList')}
             </button>
             <button
               className={`${styles.navButton} ${currentView === 'catalog' ? styles.active : ''}`}
               onClick={() => setCurrentView('catalog')}
             >
-              Meal Catalog
+              {t('nav.mealCatalog')}
             </button>
           </div>
 

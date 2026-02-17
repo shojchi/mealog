@@ -1,15 +1,22 @@
 import { useEffect, useState } from 'react';
 import { format, addWeeks, subWeeks } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { useWeekPlanStore } from '../store/weekPlanStore';
 import { db } from '../db';
 import type { Meal } from '../types';
 import { MealSelectorModal } from './MealSelectorModal';
 import styles from './WeekView.module.css';
 
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
 export function WeekView() {
+  const { t } = useTranslation();
   const { currentWeek, weeklyPlan, loading, setCurrentWeek, loadWeekPlan, removeMealFromDay, addMealToDay } = useWeekPlanStore();
+  
+  // Helper to get translated day names
+  const getDayName = (index: number) => {
+    const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    return t(`days.${dayKeys[index]}`);
+  };
+
   const [mealsCache, setMealsCache] = useState<Map<number, Meal>>(new Map());
   const [modalState, setModalState] = useState<{ isOpen: boolean; dayIndex: number | null; dayName: string }>({
     isOpen: false,
@@ -58,7 +65,7 @@ export function WeekView() {
   };
 
   const handleRemoveMeal = (dayIndex: number, mealIndex: number) => {
-    if (confirm('Remove this meal from your plan?')) {
+    if (confirm(t('common.delete') + '?')) {
       removeMealFromDay(dayIndex, mealIndex);
     }
   };
@@ -78,7 +85,7 @@ export function WeekView() {
   };
 
   if (loading) {
-    return <div className={styles.loading}>Loading week plan...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   return (
@@ -86,7 +93,7 @@ export function WeekView() {
       {/* Header with week navigation */}
       <div className={styles.header}>
         <div className={styles.weekInfo}>
-          <h1 className={styles.title}>Week Plan</h1>
+          <h1 className={styles.title}>{t('weekView.title')}</h1>
           <p className={styles.dateRange}>
             {format(currentWeek, 'MMM d')} - {format(addWeeks(currentWeek, 1), 'MMM d, yyyy')}
           </p>
@@ -95,13 +102,13 @@ export function WeekView() {
         <div className={styles.headerControls}>
           <div className={styles.navigation}>
             <button onClick={goToPreviousWeek} className={styles.navButton}>
-              ← Previous
+              ← {t('weekView.previous')}
             </button>
             <button onClick={goToCurrentWeek} className={styles.navButton}>
-              Current
+              {t('weekView.current')}
             </button>
             <button onClick={goToNextWeek} className={styles.navButton}>
-              Next →
+              {t('weekView.next')} →
             </button>
           </div>
         </div>
@@ -109,12 +116,13 @@ export function WeekView() {
 
       {/* Week Grid */}
       <div className={`${styles.weekGrid}`}>
-        {DAYS.map((dayName, dayIndex) => {
+        {Array.from({ length: 7 }).map((_, dayIndex) => {
+          const dayName = getDayName(dayIndex);
           const dayPlan = weeklyPlan?.days[dayIndex];
           const dayDate = weeklyPlan ? format(dayPlan!.date, 'MMM d') : '';
 
           return (
-            <div key={dayName} className={styles.dayColumn}>
+            <div key={dayIndex} className={styles.dayColumn}>
               <div className={styles.dayHeader}>
                 <h3 className={styles.dayName}>{dayName}</h3>
                 <span className={styles.dayDate}>{dayDate}</span>
@@ -123,7 +131,7 @@ export function WeekView() {
               <div className={styles.mealsContainer}>
                 {dayPlan?.meals.length === 0 ? (
                   <div className={styles.emptyDay}>
-                    No meals planned
+                    {t('weekView.noMealsPlanned')}
                   </div>
                 ) : (
                   dayPlan?.meals.map((scheduledMeal, mealIndex) => {
@@ -143,7 +151,7 @@ export function WeekView() {
                         <button
                           onClick={() => handleRemoveMeal(dayIndex, mealIndex)}
                           className={styles.removeButton}
-                          title="Remove meal"
+                          title={t('common.delete')}
                         >
                           ×
                         </button>
@@ -158,7 +166,7 @@ export function WeekView() {
                 className={styles.addMealButton}
                 onClick={() => handleOpenModal(dayIndex, dayName)}
               >
-                + Add Meal
+                + {t('common.add')}
               </button>
             </div>
           );

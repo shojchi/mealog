@@ -1,0 +1,163 @@
+{
+  "app": {
+    "name": "Mealog"
+  },
+  "common": {
+    "add": "Dodaj",
+    "edit": "Edytuj",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "create": "Utwórz",
+    "delete": "Usuń",
+    "remove": "Usuń",
+    "close": "Zamknij",
+    "calories": "Kalorie",
+    "protein": "Białko",
+    "carbs": "Węglowodany",
+    "fat": "Tłuszcz",
+    "caloriesAbbr": "kcal"
+  },
+  "nav": {
+    "weekPlan": "Plan tygodniowy",
+    "dayView": "Widok dnia",
+    "shoppingList": "Lista zakupów",
+    "meals": "Posiłki",
+    "mealCatalog": "Katalog posiłków"
+  },
+  "days": {
+    "sunday": "Niedziela",
+    "monday": "Poniedziałek",
+    "tuesday": "Wtorek",
+    "wednesday": "Środa",
+    "thursday": "Czwartek",
+    "friday": "Piątek",
+    "saturday": "Sobota"
+  },
+  "months": {
+    "short": {
+      "jan": "Sty",
+      "feb": "Lut",
+      "mar": "Mar",
+      "apr": "Kwi",
+      "may": "Maj",
+      "jun": "Cze",
+      "jul": "Lip",
+      "aug": "Sie",
+      "sep": "Wrz",
+      "oct": "Paź",
+      "nov": "Lis",
+      "dec": "Gru"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "language": "Język",
+    "appearance": "Wygląd",
+    "userProfile": "Profil",
+    "notifications": "Powiadomienia",
+    "dataManagement": "Zarządzanie danymi",
+    "close": "Zamknij"
+  },
+  "dayView": {
+    "today": "Dzisiaj",
+    "addFirstMeal": "Dodaj pierwszy posiłek",
+    "addAnotherMeal": "Dodaj kolejny posiłek",
+    "dailyNutrition": "Dzienne spożycie",
+    "summary": "Podsumowanie",
+    "mealPlanned": "posiłek zaplanowany",
+    "mealsPlanned": "posiłki zaplanowane",
+    "dailyCalories": "dziennego limitu"
+  },
+  "weekView": {
+    "title": "Tygodniowy plan posiłków",
+    "previous": "Poprzedni",
+    "next": "Następny",
+    "current": "Obecny",
+    "noMealsPlanned": "Brak zaplanowanych posiłków"
+  },
+  "shoppingList": {
+    "title": "Lista zakupów",
+    "generateFromWeekPlan": "Generuj z planu",
+    "regenerate": "Wygeneruj ponownie",
+    "clearCompleted": "Wyczyść ukończone",
+    "noListYet": "Brak listy",
+    "emptyDescription": "Wygeneruj listę zakupów z planu tygodniowego, aby rozpocząć.",
+    "allChecked": "Wszystko kupione! Gotowe.",
+    "categories": {
+      "dairy": "Nabiał i sery",
+      "produce": "Owoce i warzywa",
+      "meat": "Mięso i ryby",
+      "grains": "Zboża i chleb",
+      "spices": "Przyprawy i oleje",
+      "other": "Inne"
+    }
+  },
+  "catalog": {
+    "title": "Katalog posiłków",
+    "mealsAvailable": "dostępnych posiłków",
+    "createNew": "Utwórz nowy posiłek",
+    "noMealsFound": "Nie znaleziono posiłków",
+    "filters": {
+      "all": "Wszystkie",
+      "breakfast": "Śniadanie",
+      "lunch": "Obiad",
+      "dinner": "Kolacja",
+      "snack": "Przekąska"
+    }
+  },
+  "mealForm": {
+    "createTitle": "Utwórz nowy posiłek",
+    "editTitle": "Edytuj posiłek",
+    "basicInfo": "Podstawowe informacje",
+    "mealName": "Nazwa posiłku",
+    "description": "Opis",
+    "mealType": "Typ posiłku",
+    "servings": "Porcje",
+    "image": "Zdjęcie",
+    "imageUrl": "URL zdjęcia",
+    "ingredients": "Składniki",
+    "nutritionFacts": "Wartości odżywcze",
+    "labels": {
+      "title": "Etykiety",
+      "optional": "opcjonalne",
+      "addCustom": "Dodaj własną",
+      "placeholder": "Wpisz etykietę (max 20)"
+    },
+    "recipe": {
+      "title": "Instrukcje",
+      "text": "Tekst",
+      "placeholder": "Wpisz instrukcje gotowania..."
+    },
+    "placeholders": {
+      "name": "np. Tost z awokado",
+      "description": "Krótki opis",
+      "ingredientName": "Nazwa",
+      "quantity": "Il."
+    },
+    "buttons": {
+      "addIngredient": "Dodaj składnik",
+      "addLabel": "Dodaj etykietę"
+    },
+    "validation": {
+      "emptyLabel": "Etykieta nie może być pusta",
+      "labelLength": "Etykieta > 20 znaków",
+      "labelExists": "Etykieta już istnieje",
+      "nameRequired": "Nazwa wymagana",
+      "imageRequired": "URL zdjęcia wymagany",
+      "caloriesRequired": "Kalorie > 0",
+      "ingredientsRequired": "Składniki muszą mieć nazwę",
+      "createFailed": "Błąd tworzenia",
+      "updateFailed": "Błąd aktualizacji"
+    }
+  },
+  "recipe": {
+    "instructions": "Instrukcje",
+    "viewFull": "Pełny przepis",
+    "details": "Szczegóły",
+    "type": "Typ",
+    "cost": "Koszt"
+  },
+  "mealSelector": {
+    "addMealTo": "Dodaj posiłek do"
+  }
+}

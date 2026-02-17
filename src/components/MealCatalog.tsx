@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal } from '../types';
 import { MealCard } from './MealCard';
@@ -7,6 +8,7 @@ import { RecipeModal } from './RecipeModal';
 import styles from './MealCatalog.module.css';
 
 export function MealCatalog() {
+  const { t } = useTranslation();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
@@ -55,27 +57,27 @@ export function MealCatalog() {
   };
 
   const filterOptions = [
-    { value: 'all', label: 'All Meals' },
-    { value: 'breakfast', label: 'Breakfast' },
-    { value: 'lunch', label: 'Lunch' },
-    { value: 'dinner', label: 'Dinner' },
-    { value: 'snack', label: 'Snacks' },
+    { value: 'all', label: t('catalog.filters.all', 'All Meals') },
+    { value: 'breakfast', label: t('catalog.filters.breakfast', 'Breakfast') },
+    { value: 'lunch', label: t('catalog.filters.lunch', 'Lunch') },
+    { value: 'dinner', label: t('catalog.filters.dinner', 'Dinner') },
+    { value: 'snack', label: t('catalog.filters.snack', 'Snacks') },
   ];
 
   return (
     <div className={styles.catalog}>
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Meal Catalog</h1>
+          <h1 className={styles.title}>{t('catalog.title')}</h1>
           <p className={styles.subtitle}>
-            {meals.length} meals available
+            {meals.length} {meals.length === 1 ? t('catalog.mealsAvailable') : t('catalog.mealsAvailable')}
           </p>
         </div>
         <button 
           className={styles.createButton}
           onClick={() => setIsModalOpen(true)}
         >
-          ➕ Create New Meal
+          ➕ {t('catalog.createNew')}
         </button>
       </div>
 
@@ -94,10 +96,10 @@ export function MealCatalog() {
 
       {/* Meal Grid */}
       {loading ? (
-        <div className={styles.loading}>Loading meals...</div>
+        <div className={styles.loading}>Loading...</div>
       ) : meals.length === 0 ? (
         <div className={styles.emptyState}>
-          <p>No meals found</p>
+          <p>{t('catalog.noMealsFound')}</p>
         </div>
       ) : (
         <div className={styles.mealsGrid}>
