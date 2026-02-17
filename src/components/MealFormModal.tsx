@@ -37,8 +37,23 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
   
   // Labels
   const [selectedLabels, setSelectedLabels] = useState<MealLabel[]>([]);
+  const [customLabels, setCustomLabels] = useState<string[]>([]);
+  const [showLabelModal, setShowLabelModal] = useState(false);
+  const [newLabelInput, setNewLabelInput] = useState('');
   
   const [error, setError] = useState('');
+
+  // Load custom labels from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('customLabels');
+    if (stored) {
+      try {
+        setCustomLabels(JSON.parse(stored));
+      } catch (e) {
+        console.error('Failed to parse custom labels:', e);
+      }
+    }
+  }, []);
 
   // Pre-fill form when editing
   useEffect(() => {
@@ -80,6 +95,36 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
       prev.includes(label) ? prev.filter(l => l !== label) : [...prev, label]
     );
   };
+
+  const handleAddCustomLabel = () => {
+    const trimmed = newLabelInput.trim().toLowerCase();
+    
+    // Validation
+    if (!trimmed) {
+      alert('Label cannot be empty');
+      return;
+    }
+    
+    if (trimmed.length > 20) {
+      alert('Label must be 20 characters or less');
+      return;
+    }
+    
+    if (customLabels.includes(trimmed)) {
+      alert('This label already exists');
+      return;
+    }
+    
+    // Add to custom labels
+    const updatedLabels = [...customLabels, trimmed];
+    setCustomLabels(updatedLabels);
+    localStorage.setItem('customLabels', JSON.stringify(updatedLabels));
+    
+    // Reset and close modal
+    setNewLabelInput('');
+    setShowLabelModal(false);
+  };
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -372,6 +417,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
           <section className={styles.section}>
             <h3>Labels (optional)</h3>
             <div className={styles.labelsGrid}>
+              {/* Default labels */}
               {(['quick', 'high-protein', 'low-carb', 'vegetarian', 'vegan', 'gluten-free', 'dairy-free'] as MealLabel[]).map((label) => (
                 <label key={label} className={styles.checkbox}>
                   <input
@@ -382,8 +428,59 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   <span>{label.replace('-', ' ')}</span>
                 </label>
               ))}
+              
+              {/* Custom labels */}
+              {customLabels.map((label) => (
+                <label key={label} className={styles.checkbox}>
+                  <input
+                    type="checkbox"
+                    checked={selectedLabels.includes(label as MealLabel)}
+                    onChange={() => toggleLabel(label as MealLabel)}
+                  />
+                  <span>{label}</span>
+                </label>
+              ))}
+              
+              {/* Add custom label button */}
+              <button
+                type="button"
+                className={styles.addLabelButton}
+                onClick={() => setShowLabelModal(true)}
+                title="Add custom label"
+              >
+                +
+              </button>
             </div>
           </section>
+
+          {/* Custom Label Modal */}
+          {showLabelModal && (
+            <div className={styles.labelModalOverlay} onClick={() => setShowLabelModal(false)}>
+              <div className={styles.labelModalContent} onClick={(e) => e.stopPropagation()}>
+                <h4>Add Custom Label</h4>
+                <input
+                  type="text"
+                  value={newLabelInput}
+                  onChange={(e) => setNewLabelInput(e.target.value)}
+                  placeholder="Enter label (max 20 chars)"
+                  maxLength={20}
+                  autoFocus
+                  onKeyPress={(e) => e.key === 'Enter' && handleAddCustomLabel()}
+                />
+                <div className={styles.labelModalButtons}>
+                  <button type="button" onClick={handleAddCustomLabel}>
+                    Add
+                  </button>
+                  <button type="button" onClick={() => {
+                    setNewLabelInput('');
+                    setShowLabelModal(false);
+                  }}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Recipe Section */}
           <section className={styles.section}>

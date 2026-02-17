@@ -60,7 +60,7 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
     }));
 
     const newPlan: Omit<WeeklyPlan, "id"> = {
-      weekStart: currentWeek,
+      weekStart: currentWeek.getTime(), // Store as timestamp, not Date
       days,
       createdAt: new Date(),
       updatedAt: new Date(),

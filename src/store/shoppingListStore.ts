@@ -121,7 +121,7 @@ export const useShoppingListStore = create<ShoppingListState>((set, get) => ({
       // Find shopping list for current week
       const lists = await db.shoppingLists
         .where("weekStartDate")
-        .equals(weekPlan.weekStart.getTime())
+        .equals(weekPlan.weekStart) // weekStart is now already a timestamp
         .toArray();
 
       set({

@@ -66,6 +66,138 @@ export const seedMeals: Omit<Meal, "id" | "createdAt" | "updatedAt">[] = [
     totalPrice: 3.2,
   },
 
+  // BREAKFAST 2
+  {
+    name: "Overnight Oats with Banana",
+    description:
+      "Creamy overnight oats with sliced banana, chia seeds, cinnamon, and a drizzle of maple syrup",
+    image: {
+      type: "url",
+      content:
+        "https://images.unsplash.com/photo-1590301157890-4810ed352733?w=400",
+    },
+    recipe: {
+      type: "text",
+      content:
+        "Mix oats with milk and chia seeds. Refrigerate overnight. Top with banana and maple syrup in the morning.",
+    },
+    ingredients: [
+      {
+        name: "Rolled oats",
+        quantity: 50,
+        unit: "g",
+        pricePerUnit: 4,
+        category: "grains",
+      },
+      {
+        name: "Milk",
+        quantity: 200,
+        unit: "ml",
+        pricePerUnit: 2,
+        category: "dairy",
+      },
+      {
+        name: "Chia seeds",
+        quantity: 1,
+        unit: "tbsp",
+        pricePerUnit: 0.5,
+        category: "other",
+      },
+      {
+        name: "Banana",
+        quantity: 1,
+        unit: "pcs",
+        pricePerUnit: 0.4,
+        category: "produce",
+      },
+      {
+        name: "Maple syrup",
+        quantity: 1,
+        unit: "tbsp",
+        pricePerUnit: 0.8,
+        category: "other",
+      },
+    ],
+    nutrition: {
+      calories: 320,
+      protein: 12,
+      carbs: 55,
+      fat: 8,
+      fiber: 8,
+      calcium: 25,
+    },
+    mealType: "breakfast",
+    labels: ["quick", "vegetarian"],
+    servings: 1,
+    totalPrice: 2.9,
+  },
+
+  // BREAKFAST 3
+  {
+    name: "Veggie Scramble with Toast",
+    description:
+      "Fluffy scrambled eggs with bell peppers, mushrooms, spinach, and whole wheat toast",
+    image: {
+      type: "url",
+      content:
+        "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400",
+    },
+    recipe: {
+      type: "text",
+      content:
+        "Sauté vegetables until tender. Add beaten eggs and scramble. Serve with toasted bread.",
+    },
+    ingredients: [
+      {
+        name: "Eggs",
+        quantity: 3,
+        unit: "pcs",
+        pricePerUnit: 0.3,
+        category: "dairy",
+      },
+      {
+        name: "Bell pepper",
+        quantity: 50,
+        unit: "g",
+        pricePerUnit: 4,
+        category: "produce",
+      },
+      {
+        name: "Mushrooms",
+        quantity: 50,
+        unit: "g",
+        pricePerUnit: 8,
+        category: "produce",
+      },
+      {
+        name: "Spinach",
+        quantity: 30,
+        unit: "g",
+        pricePerUnit: 6,
+        category: "produce",
+      },
+      {
+        name: "Whole wheat bread",
+        quantity: 2,
+        unit: "pcs",
+        pricePerUnit: 0.5,
+        category: "grains",
+      },
+    ],
+    nutrition: {
+      calories: 340,
+      protein: 22,
+      carbs: 32,
+      fat: 15,
+      iron: 25,
+      vitaminD: 10,
+    },
+    mealType: "breakfast",
+    labels: ["high-protein", "vegetarian"],
+    servings: 1,
+    totalPrice: 3.3,
+  },
+
   // LUNCH
   {
     name: "Quinoa Salad with Grilled Chicken",
@@ -138,6 +270,151 @@ export const seedMeals: Omit<Meal, "id" | "createdAt" | "updatedAt">[] = [
     totalPrice: 5.8,
   },
 
+  // LUNCH 2
+  {
+    name: "Mediterranean Wrap",
+    description:
+      "Whole wheat wrap filled with hummus, feta cheese, cucumbers, tomatoes, red onion, and mixed greens",
+    image: {
+      type: "url",
+      content:
+        "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400",
+    },
+    recipe: {
+      type: "text",
+      content:
+        "Spread hummus on wrap. Layer vegetables and feta. Roll tightly and cut in half.",
+    },
+    ingredients: [
+      {
+        name: "Whole wheat tortilla",
+        quantity: 1,
+        unit: "pcs",
+        pricePerUnit: 0.8,
+        category: "grains",
+      },
+      {
+        name: "Hummus",
+        quantity: 60,
+        unit: "g",
+        pricePerUnit: 6,
+        category: "other",
+      },
+      {
+        name: "Feta cheese",
+        quantity: 40,
+        unit: "g",
+        pricePerUnit: 12,
+        category: "dairy",
+      },
+      {
+        name: "Cucumber",
+        quantity: 80,
+        unit: "g",
+        pricePerUnit: 2,
+        category: "produce",
+      },
+      {
+        name: "Tomatoes",
+        quantity: 80,
+        unit: "g",
+        pricePerUnit: 4,
+        category: "produce",
+      },
+      {
+        name: "Mixed greens",
+        quantity: 30,
+        unit: "g",
+        pricePerUnit: 6,
+        category: "produce",
+      },
+    ],
+    nutrition: {
+      calories: 380,
+      protein: 14,
+      carbs: 48,
+      fat: 16,
+      calcium: 18,
+      iron: 12,
+    },
+    mealType: "lunch",
+    labels: ["quick", "vegetarian"],
+    servings: 1,
+    totalPrice: 4.2,
+  },
+
+  // LUNCH 3
+  {
+    name: "Thai Peanut Noodles",
+    description:
+      "Rice noodles tossed with vegetables, peanut sauce, and topped with crushed peanuts and cilantro",
+    image: {
+      type: "url",
+      content:
+        "https://images.unsplash.com/photo-1552611052-33e04de081de?w=400",
+    },
+    recipe: {
+      type: "url",
+      content: "https://www.example.com/thai-peanut-noodles",
+    },
+    ingredients: [
+      {
+        name: "Rice noodles",
+        quantity: 100,
+        unit: "g",
+        pricePerUnit: 6,
+        category: "grains",
+      },
+      {
+        name: "Peanut butter",
+        quantity: 2,
+        unit: "tbsp",
+        pricePerUnit: 1.2,
+        category: "other",
+      },
+      {
+        name: "Bell pepper",
+        quantity: 100,
+        unit: "g",
+        pricePerUnit: 4,
+        category: "produce",
+      },
+      {
+        name: "Carrots",
+        quantity: 80,
+        unit: "g",
+        pricePerUnit: 2,
+        category: "produce",
+      },
+      {
+        name: "Edamame",
+        quantity: 60,
+        unit: "g",
+        pricePerUnit: 8,
+        category: "produce",
+      },
+      {
+        name: "Peanuts",
+        quantity: 20,
+        unit: "g",
+        pricePerUnit: 10,
+        category: "other",
+      },
+    ],
+    nutrition: {
+      calories: 420,
+      protein: 16,
+      carbs: 52,
+      fat: 18,
+      fiber: 6,
+      iron: 15,
+    },
+    mealType: "lunch",
+    labels: ["vegan", "dairy-free"],
+    servings: 1,
+    totalPrice: 5.4,
+  },
+
   // DINNER
   {
     name: "Baked Salmon with Roasted Vegetables",
@@ -203,6 +480,151 @@ export const seedMeals: Omit<Meal, "id" | "createdAt" | "updatedAt">[] = [
     labels: ["high-protein", "gluten-free", "dairy-free"],
     servings: 1,
     totalPrice: 7.4,
+  },
+
+  // DINNER 2
+  {
+    name: "Chicken Stir-Fry with Brown Rice",
+    description:
+      "Tender chicken breast with colorful vegetables in a savory soy-ginger sauce, served over brown rice",
+    image: {
+      type: "url",
+      content:
+        "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400",
+    },
+    recipe: {
+      type: "text",
+      content:
+        "Cook brown rice. Stir-fry chicken until golden. Add vegetables and sauce. Simmer until vegetables are tender-crisp.",
+    },
+    ingredients: [
+      {
+        name: "Chicken breast",
+        quantity: 150,
+        unit: "g",
+        pricePerUnit: 12,
+        category: "meat",
+      },
+      {
+        name: "Brown rice",
+        quantity: 80,
+        unit: "g",
+        pricePerUnit: 5,
+        category: "grains",
+      },
+      {
+        name: "Broccoli",
+        quantity: 100,
+        unit: "g",
+        pricePerUnit: 4,
+        category: "produce",
+      },
+      {
+        name: "Bell pepper",
+        quantity: 80,
+        unit: "g",
+        pricePerUnit: 4,
+        category: "produce",
+      },
+      {
+        name: "Snap peas",
+        quantity: 60,
+        unit: "g",
+        pricePerUnit: 8,
+        category: "produce",
+      },
+      {
+        name: "Soy sauce",
+        quantity: 2,
+        unit: "tbsp",
+        pricePerUnit: 0.2,
+        category: "other",
+      },
+    ],
+    nutrition: {
+      calories: 480,
+      protein: 38,
+      carbs: 58,
+      fat: 10,
+      iron: 18,
+      vitaminC: 120,
+    },
+    mealType: "dinner",
+    labels: ["high-protein", "dairy-free"],
+    servings: 1,
+    totalPrice: 6.2,
+  },
+
+  // DINNER 3
+  {
+    name: "Lentil Curry with Naan",
+    description:
+      "Creamy red lentil curry with coconut milk, tomatoes, and Indian spices, served with warm naan bread",
+    image: {
+      type: "url",
+      content:
+        "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400",
+    },
+    recipe: {
+      type: "url",
+      content: "https://www.example.com/lentil-curry-recipe",
+    },
+    ingredients: [
+      {
+        name: "Red lentils",
+        quantity: 100,
+        unit: "g",
+        pricePerUnit: 6,
+        category: "grains",
+      },
+      {
+        name: "Coconut milk",
+        quantity: 150,
+        unit: "ml",
+        pricePerUnit: 4,
+        category: "other",
+      },
+      {
+        name: "Tomatoes",
+        quantity: 150,
+        unit: "g",
+        pricePerUnit: 4,
+        category: "produce",
+      },
+      {
+        name: "Onion",
+        quantity: 80,
+        unit: "g",
+        pricePerUnit: 2,
+        category: "produce",
+      },
+      {
+        name: "Curry powder",
+        quantity: 2,
+        unit: "tsp",
+        pricePerUnit: 0.4,
+        category: "spices",
+      },
+      {
+        name: "Naan bread",
+        quantity: 1,
+        unit: "pcs",
+        pricePerUnit: 1.5,
+        category: "grains",
+      },
+    ],
+    nutrition: {
+      calories: 520,
+      protein: 24,
+      carbs: 72,
+      fat: 16,
+      fiber: 18,
+      iron: 35,
+    },
+    mealType: "dinner",
+    labels: ["vegan", "dairy-free"],
+    servings: 1,
+    totalPrice: 5.6,
   },
 
   // SNACK 1

@@ -10,6 +10,8 @@
   justify-content: center;
   z-index: 1000;
   padding: var(--spacing-lg);
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .modal {
@@ -103,8 +105,9 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: var(--spacing-md);
   padding: var(--spacing-lg);
-  overflow-y: auto;
+  overflow-y: scroll;
   flex: 1;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mealCard {
@@ -113,6 +116,10 @@
   overflow: hidden;
   cursor: pointer;
   transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 240px;
 }
 
 .mealCard:hover {
@@ -128,6 +135,10 @@
 
 .mealInfo {
   padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
 .mealName {
@@ -135,9 +146,11 @@
   font-weight: var(--font-weight-medium);
   margin-bottom: 4px;
   color: var(--color-text-primary);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .mealType {

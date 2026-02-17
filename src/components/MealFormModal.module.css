@@ -246,6 +246,107 @@
   font-weight: var(--font-weight-semibold);
 }
 
+/* Add Label Button */
+.addLabelButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  background: var(--color-teal-light);
+  border: 2px dashed var(--color-teal);
+  border-radius: 6px;
+  color: var(--color-teal-dark);
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addLabelButton:hover {
+  background: var(--color-teal);
+  color: white;
+  border-style: solid;
+}
+
+/* Custom Label Modal */
+.labelModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.labelModalContent {
+  background: white;
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.labelModalContent h4 {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--color-teal-dark);
+  font-size: 1.25rem;
+}
+
+.labelModalContent input {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.labelModalContent input:focus {
+  outline: none;
+  border-color: var(--color-teal);
+  box-shadow: 0 0 0 3px rgba(98, 219, 203, 0.1);
+}
+
+.labelModalButtons {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.labelModalButtons button {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 6px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.labelModalButtons button:first-child {
+  background: var(--color-teal);
+  color: white;
+}
+
+.labelModalButtons button:first-child:hover {
+  background: var(--color-teal-dark);
+}
+
+.labelModalButtons button:last-child {
+  background: var(--color-gray-200);
+  color: var(--color-gray-700);
+}
+
+.labelModalButtons button:last-child:hover {
+  background: var(--color-gray-300);
+}
+
+
 /* Recipe Toggle */
 .recipeToggle {
   display: flex;
