@@ -8,6 +8,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 100%;
+  overflow: hidden;
   margin-bottom: var(--spacing-xl);
   flex-wrap: wrap;
   gap: var(--spacing-md);
@@ -40,6 +42,10 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .navButton:hover {
@@ -354,5 +360,20 @@
   
   .nutritionStats {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navigation {
+    width: 100%;
+  }
+
+  .navButton {
+    flex: 1;
   }
 }

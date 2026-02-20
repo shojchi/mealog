@@ -328,14 +328,14 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   value={ingredient.unit}
                   onChange={(e) => updateIngredient(index, 'unit', e.target.value as MeasurementUnit)}
                 >
-                  <option value="g">g</option>
-                  <option value="kg">kg</option>
-                  <option value="ml">ml</option>
-                  <option value="l">l</option>
-                  <option value="pcs">pcs</option>
-                  <option value="tbsp">tbsp</option>
-                  <option value="tsp">tsp</option>
-                  <option value="cup">cup</option>
+                  <option value="g">{t('units.g', 'g')}</option>
+                  <option value="kg">{t('units.kg', 'kg')}</option>
+                  <option value="ml">{t('units.ml', 'ml')}</option>
+                  <option value="l">{t('units.l', 'l')}</option>
+                  <option value="pcs">{t('units.pcs', 'pcs')}</option>
+                  <option value="tbsp">{t('units.tbsp', 'tbsp')}</option>
+                  <option value="tsp">{t('units.tsp', 'tsp')}</option>
+                  <option value="cup">{t('units.cup', 'cup')}</option>
                 </select>
                 <select
                   value={ingredient.category}

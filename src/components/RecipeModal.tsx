@@ -61,7 +61,7 @@ export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
                 <li key={index}>
                   <span className={styles.ingredientName}>{ingredient.name}</span>
                   <span className={styles.ingredientAmount}>
-                    {ingredient.quantity} {ingredient.unit}
+                    {ingredient.quantity} {t(`units.${ingredient.unit}`, ingredient.unit)}
                   </span>
                 </li>
               ))}

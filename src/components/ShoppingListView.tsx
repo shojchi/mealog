@@ -66,7 +66,7 @@ export function ShoppingListView() {
           <h1 className={styles.title}>{t('shoppingList.title')}</h1>
           {shoppingList && (
             <p className={styles.stats}>
-              {completedItems} of {totalItems} items checked
+              {completedItems} / {totalItems}
             </p>
           )}
         </div>
@@ -122,11 +122,11 @@ export function ShoppingListView() {
                       {item.ingredientName}
                     </span>
                     <span className={`${styles.itemQuantity} ${item.purchased ? styles.checked : ''}`}>
-                      {item.totalQuantity === Math.floor(item.totalQuantity) 
+                      {item.totalQuantity % 1 === 0 
                         ? item.totalQuantity 
                         : item.totalQuantity.toFixed(1)
                       }{' '}
-                      {item.unit}
+                      {t(`units.${item.unit}`, item.unit)}
                     </span>
                   </label>
                 ))}

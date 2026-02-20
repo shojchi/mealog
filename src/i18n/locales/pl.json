@@ -159,5 +159,15 @@
   },
   "mealSelector": {
     "addMealTo": "Dodaj posiłek do"
+  },
+  "units": {
+    "g": "g",
+    "kg": "kg",
+    "ml": "ml",
+    "l": "l",
+    "pcs": "szt.",
+    "tbsp": "łyżka",
+    "tsp": "łyżeczka",
+    "cup": "szkl."
   }
 }
