@@ -150,6 +150,7 @@
   overflow: hidden;
   position: relative;
   transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
 .mealCard:hover {

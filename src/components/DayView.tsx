@@ -5,6 +5,7 @@ import { useWeekPlanStore } from '../store/weekPlanStore';
 import { db } from '../db';
 import type { Meal, DayPlan, Nutrition } from '../types';
 import { MealSelectorModal } from './MealSelectorModal';
+import { RecipeModal } from './RecipeModal';
 import styles from './DayView.module.css';
 
 export function DayView() {
@@ -37,6 +38,7 @@ export function DayView() {
     fat: 0,
   });
   const [modalState, setModalState] = useState({ isOpen: false, dayName: '' });
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
 
   // Load week plan on mount
   useEffect(() => {
@@ -182,7 +184,7 @@ export function DayView() {
           ) : (
             <div className={styles.mealsList}>
               {meals.map((meal, index) => (
-                <div key={index} className={styles.mealCard}>
+                <div key={index} className={styles.mealCard} onClick={() => setSelectedMeal(meal)}>
                   <img 
                     src={meal.image.content} 
                     alt={meal.name}
@@ -221,7 +223,10 @@ export function DayView() {
                   </div>
 
                   <button
-                    onClick={() => handleRemoveMeal(index)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveMeal(index);
+                    }}
                     className={styles.removeButton}
                     title={t('common.remove')}
                   >
@@ -326,6 +331,13 @@ export function DayView() {
         onClose={handleCloseModal}
         onSelectMeal={handleSelectMeal}
         dayName={modalState.dayName}
+      />
+
+      {/* Recipe View Modal */}
+      <RecipeModal
+        meal={selectedMeal}
+        isOpen={selectedMeal !== null}
+        onClose={() => setSelectedMeal(null)}
       />
     </div>
   );

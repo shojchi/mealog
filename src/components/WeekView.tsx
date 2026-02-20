@@ -5,6 +5,7 @@ import { useWeekPlanStore } from '../store/weekPlanStore';
 import { db } from '../db';
 import type { Meal } from '../types';
 import { MealSelectorModal } from './MealSelectorModal';
+import { RecipeModal } from './RecipeModal';
 import styles from './WeekView.module.css';
 
 export function WeekView() {
@@ -23,6 +24,7 @@ export function WeekView() {
     dayIndex: null,
     dayName: '',
   });
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
 
   useEffect(() => {
     loadWeekPlan();
@@ -139,7 +141,7 @@ export function WeekView() {
                     if (!meal) return null;
 
                     return (
-                      <div key={mealIndex} className={styles.mealCard}>
+                      <div key={mealIndex} className={styles.mealCard} onClick={() => setSelectedMeal(meal)}>
                         <img 
                           src={meal.image.content} 
                           alt={meal.name}
@@ -149,7 +151,10 @@ export function WeekView() {
                           <h4 className={styles.mealName}>{meal.name}</h4>
                         </div>
                         <button
-                          onClick={() => handleRemoveMeal(dayIndex, mealIndex)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveMeal(dayIndex, mealIndex);
+                          }}
                           className={styles.removeButton}
                           title={t('common.delete')}
                         >
@@ -179,6 +184,13 @@ export function WeekView() {
         onClose={handleCloseModal}
         onSelectMeal={handleSelectMeal}
         dayName={modalState.dayName}
+      />
+
+      {/* Recipe View Modal */}
+      <RecipeModal
+        meal={selectedMeal}
+        isOpen={selectedMeal !== null}
+        onClose={() => setSelectedMeal(null)}
       />
     </div>
   );
