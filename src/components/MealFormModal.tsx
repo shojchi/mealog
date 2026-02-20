@@ -19,21 +19,22 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [mealType, setMealType] = useState<MealType>('breakfast');
-  const [servings, setServings] = useState(1);
+  const [servings, setServings] = useState<string | number>('1');
   
   // Image
   const [imageUrl, setImageUrl] = useState('');
   
   // Ingredients
-  const [ingredients, setIngredients] = useState<Ingredient[]>([
-    { name: '', quantity: 0, unit: 'g', category: 'other' },
+  type FormIngredient = Omit<Ingredient, 'quantity'> & { quantity: string | number };
+  const [ingredients, setIngredients] = useState<FormIngredient[]>([
+    { name: '', quantity: '0', unit: 'g', category: 'other' },
   ]);
   
   // Nutrition
-  const [calories, setCalories] = useState(0);
-  const [protein, setProtein] = useState(0);
-  const [carbs, setCarbs] = useState(0);
-  const [fat, setFat] = useState(0);
+  const [calories, setCalories] = useState<string | number>('0');
+  const [protein, setProtein] = useState<string | number>('0');
+  const [carbs, setCarbs] = useState<string | number>('0');
+  const [fat, setFat] = useState<string | number>('0');
   
   // Recipe
   const [recipeType, setRecipeType] = useState<'url' | 'text'>('text');
@@ -65,13 +66,13 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
       setName(editMeal.name);
       setDescription(editMeal.description);
       setMealType(editMeal.mealType);
-      setServings(editMeal.servings);
+      setServings(editMeal.servings.toString());
       setImageUrl(editMeal.image.content);
-      setIngredients(editMeal.ingredients.length > 0 ? editMeal.ingredients : [{ name: '', quantity: 0, unit: 'g', category: 'other' }]);
-      setCalories(editMeal.nutrition.calories);
-      setProtein(editMeal.nutrition.protein);
-      setCarbs(editMeal.nutrition.carbs);
-      setFat(editMeal.nutrition.fat);
+      setIngredients(editMeal.ingredients.length > 0 ? editMeal.ingredients.map(i => ({ ...i, quantity: i.quantity.toString() })) : [{ name: '', quantity: '0', unit: 'g', category: 'other' }]);
+      setCalories(editMeal.nutrition.calories.toString());
+      setProtein(editMeal.nutrition.protein.toString());
+      setCarbs(editMeal.nutrition.carbs.toString());
+      setFat(editMeal.nutrition.fat.toString());
       setRecipeType(editMeal.recipe.type);
       setRecipeContent(editMeal.recipe.content);
       setSelectedLabels(editMeal.labels);
@@ -80,8 +81,30 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
 
   if (!isOpen) return null;
 
+  const handleNumberChange = (setter: React.Dispatch<React.SetStateAction<string | number>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value;
+    if (val === '') {
+      setter('0');
+      return;
+    }
+    if (val.length > 1 && val.startsWith('0') && val[1] !== '.') {
+      val = val.replace(/^0+/, '');
+    }
+    setter(val);
+  };
+
+  const updateIngredientQuantity = (index: number, val: string) => {
+    if (val === '') val = '0';
+    if (val.length > 1 && val.startsWith('0') && val[1] !== '.') {
+      val = val.replace(/^0+/, '');
+    }
+    const updated = [...ingredients];
+    updated[index] = { ...updated[index], quantity: val };
+    setIngredients(updated);
+  };
+
   const addIngredient = () => {
-    setIngredients([...ingredients, { name: '', quantity: 0, unit: 'g', category: 'other' }]);
+    setIngredients([...ingredients, { name: '', quantity: '0', unit: 'g', category: 'other' }]);
   };
 
   const removeIngredient = (index: number) => {
@@ -158,16 +181,16 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
           type: recipeType,
           content: recipeContent.trim(),
         },
-        ingredients: ingredients.filter(ing => ing.name.trim()),
+        ingredients: ingredients.filter(ing => ing.name.trim()).map(ing => ({ ...ing, quantity: Number(ing.quantity) || 0 })),
         nutrition: {
-          calories,
-          protein,
-          carbs,
-          fat,
+          calories: Number(calories) || 0,
+          protein: Number(protein) || 0,
+          carbs: Number(carbs) || 0,
+          fat: Number(fat) || 0,
         },
         mealType,
         labels: selectedLabels,
-        servings,
+        servings: Number(servings) || 1,
         createdAt: editMeal?.createdAt || new Date(),
         updatedAt: new Date(),
       };
@@ -193,13 +216,13 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
     setName('');
     setDescription('');
     setMealType('breakfast');
-    setServings(1);
+    setServings('1');
     setImageUrl('');
-    setIngredients([{ name: '', quantity: 0, unit: 'g', category: 'other' }]);
-    setCalories(0);
-    setProtein(0);
-    setCarbs(0);
-    setFat(0);
+    setIngredients([{ name: '', quantity: '0', unit: 'g', category: 'other' }]);
+    setCalories('0');
+    setProtein('0');
+    setCarbs('0');
+    setFat('0');
     setRecipeType('text');
     setRecipeContent('');
     setSelectedLabels([]);
@@ -269,7 +292,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   type="number"
                   min="1"
                   value={servings}
-                  onChange={(e) => setServings(Number(e.target.value))}
+                  onChange={handleNumberChange(setServings)}
                 />
               </div>
             </div>
@@ -312,7 +335,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   min="0"
                   step="0.1"
                   value={ingredient.quantity}
-                  onChange={(e) => updateIngredient(index, 'quantity', Number(e.target.value))}
+                  onChange={(e) => updateIngredientQuantity(index, e.target.value)}
                 />
                 <select
                   value={ingredient.unit}
@@ -365,7 +388,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   type="number"
                   min="0"
                   value={calories}
-                  onChange={(e) => setCalories(Number(e.target.value))}
+                  onChange={handleNumberChange(setCalories)}
                 />
               </div>
               <div className={styles.inputGroup}>
@@ -376,7 +399,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   min="0"
                   step="0.1"
                   value={protein}
-                  onChange={(e) => setProtein(Number(e.target.value))}
+                  onChange={handleNumberChange(setProtein)}
                 />
               </div>
               <div className={styles.inputGroup}>
@@ -387,7 +410,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   min="0"
                   step="0.1"
                   value={carbs}
-                  onChange={(e) => setCarbs(Number(e.target.value))}
+                  onChange={handleNumberChange(setCarbs)}
                 />
               </div>
               <div className={styles.inputGroup}>
@@ -398,7 +421,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                   min="0"
                   step="0.1"
                   value={fat}
-                  onChange={(e) => setFat(Number(e.target.value))}
+                  onChange={handleNumberChange(setFat)}
                 />
               </div>
             </div>
