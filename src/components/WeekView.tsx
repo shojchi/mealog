@@ -6,6 +6,7 @@ import { db } from '../db';
 import type { Meal } from '../types';
 import { MealSelectorModal } from './MealSelectorModal';
 import { RecipeModal } from './RecipeModal';
+import { ImageWithFallback } from './ImageWithFallback';
 import styles from './WeekView.module.css';
 
 export function WeekView() {
@@ -142,7 +143,7 @@ export function WeekView() {
 
                     return (
                       <div key={mealIndex} className={styles.mealCard} onClick={() => setSelectedMeal(meal)}>
-                        <img 
+                        <ImageWithFallback 
                           src={meal.image.content} 
                           alt={meal.name}
                           className={styles.mealImage}

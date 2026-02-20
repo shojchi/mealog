@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { Meal } from '../types';
 import styles from './MealCard.module.css';
+import { ImageWithFallback } from './ImageWithFallback';
 
 interface MealCardProps {
   meal: Meal;
@@ -20,7 +21,7 @@ export function MealCard({ meal, onClick, onEdit }: MealCardProps) {
     <div className={styles.card} onClick={onClick}>
       {/* Meal Image */}
       <div className={styles.imageContainer}>
-        <img 
+        <ImageWithFallback 
           src={meal.image.content} 
           alt={meal.name}
           className={styles.image}
@@ -56,10 +57,10 @@ export function MealCard({ meal, onClick, onEdit }: MealCardProps) {
             <strong>{meal.nutrition.calories}</strong> {t('common.calories')}
           </span>
           <span className={styles.nutritionItem}>
-            <strong>{meal.nutrition.protein}g</strong> {t('common.protein')}
+            <strong>{meal.nutrition.protein}{t('units.g', 'g')}</strong> {t('common.protein')}
           </span>
           <span className={styles.nutritionItem}>
-            <strong>{meal.nutrition.carbs}g</strong> carbs
+            <strong>{meal.nutrition.carbs}{t('units.g', 'g')}</strong> {t('common.carbs', 'Carbs')}
           </span>
         </div>
         

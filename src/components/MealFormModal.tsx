@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal, Ingredient, MealType, MealLabel, MeasurementUnit, IngredientCategory } from '../types';
 import styles from './MealFormModal.module.css';
+import { ImageWithFallback } from './ImageWithFallback';
+import placeholderSvg from '../assets/meal-placeholder.svg';
 
 interface MealFormModalProps {
   isOpen: boolean;
@@ -137,26 +139,20 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
       setError(t('mealForm.validation.nameRequired', 'Meal name is required'));
       return;
     }
-    if (!imageUrl.trim()) {
-      setError(t('mealForm.validation.imageRequired', 'Image URL is required'));
-      return;
-    }
-    if (calories <= 0) {
-      setError(t('mealForm.validation.caloriesRequired', 'Calories must be greater than 0'));
-      return;
-    }
     if (ingredients.some(ing => !ing.name.trim())) {
       setError(t('mealForm.validation.ingredientsRequired', 'All ingredients must have a name'));
       return;
     }
 
     try {
+      const finalImageUrl = imageUrl.trim() || placeholderSvg;
+
       const mealData: Meal = {
         name: name.trim(),
         description: description.trim(),
         image: {
           type: 'url',
-          content: imageUrl.trim(),
+          content: finalImageUrl,
         },
         recipe: {
           type: recipeType,
@@ -283,18 +279,17 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
           <section className={styles.section}>
             <h3>{t('mealForm.image')}</h3>
             <div className={styles.inputGroup}>
-              <label htmlFor="imageUrl">{t('mealForm.imageUrl')} *</label>
+              <label htmlFor="imageUrl">{t('mealForm.imageUrl')}</label>
               <input
                 id="imageUrl"
                 type="url"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://images.unsplash.com/..."
-                required
               />
               {imageUrl && (
                 <div className={styles.imagePreview}>
-                  <img src={imageUrl} alt="Preview" />
+                  <ImageWithFallback src={imageUrl} alt="Preview" />
                 </div>
               )}
             </div>
@@ -364,18 +359,17 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
             <h3>{t('mealForm.nutritionFacts')}</h3>
             <div className={styles.nutritionGrid}>
               <div className={styles.inputGroup}>
-                <label htmlFor="calories">{t('common.calories')} *</label>
+                <label htmlFor="calories">{t('common.calories')}</label>
                 <input
                   id="calories"
                   type="number"
                   min="0"
                   value={calories}
                   onChange={(e) => setCalories(Number(e.target.value))}
-                  required
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label htmlFor="protein">{t('common.protein')} (g)</label>
+                <label htmlFor="protein">{t('common.protein')} ({t('units.g', 'g')})</label>
                 <input
                   id="protein"
                   type="number"
@@ -386,7 +380,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label htmlFor="carbs">{t('common.carbs')} (g)</label>
+                <label htmlFor="carbs">{t('common.carbs')} ({t('units.g', 'g')})</label>
                 <input
                   id="carbs"
                   type="number"
@@ -397,7 +391,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label htmlFor="fat">{t('common.fat')} (g)</label>
+                <label htmlFor="fat">{t('common.fat')} ({t('units.g', 'g')})</label>
                 <input
                   id="fat"
                   type="number"

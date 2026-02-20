@@ -7,6 +7,7 @@ import type { Meal, DayPlan, Nutrition } from '../types';
 import { MealSelectorModal } from './MealSelectorModal';
 import { RecipeModal } from './RecipeModal';
 import styles from './DayView.module.css';
+import { ImageWithFallback } from './ImageWithFallback';
 
 export function DayView() {
   const { t } = useTranslation();
@@ -185,7 +186,7 @@ export function DayView() {
             <div className={styles.mealsList}>
               {meals.map((meal, index) => (
                 <div key={index} className={styles.mealCard} onClick={() => setSelectedMeal(meal)}>
-                  <img 
+                  <ImageWithFallback 
                     src={meal.image.content} 
                     alt={meal.name}
                     className={styles.mealImage}
@@ -204,13 +205,13 @@ export function DayView() {
                         <strong>{meal.nutrition.calories}</strong> {t('common.calories')}
                       </div>
                       <div className={styles.nutrientBadge}>
-                        <strong>{meal.nutrition.protein}g</strong> {t('common.protein')}
+                        <strong>{meal.nutrition.protein}{t('units.g', 'g')}</strong> {t('common.protein')}
                       </div>
                       <div className={styles.nutrientBadge}>
-                        <strong>{meal.nutrition.carbs}g</strong> {t('common.carbs')}
+                        <strong>{meal.nutrition.carbs}{t('units.g', 'g')}</strong> {t('common.carbs')}
                       </div>
                       <div className={styles.nutrientBadge}>
-                        <strong>{meal.nutrition.fat}g</strong> {t('common.fat')}
+                        <strong>{meal.nutrition.fat}{t('units.g', 'g')}</strong> {t('common.fat')}
                       </div>
                     </div>
 
@@ -268,7 +269,7 @@ export function DayView() {
               <div className={styles.statHeader}>
                 <span className={styles.statLabel}>{t('common.protein')}</span>
                 <span className={styles.statValue}>
-                  {dailyNutrition.protein}g / {goals.protein}g
+                  {dailyNutrition.protein}{t('units.g', 'g')} / {goals.protein}{t('units.g', 'g')}
                 </span>
               </div>
               <div className={styles.progressBar}>
@@ -284,7 +285,7 @@ export function DayView() {
               <div className={styles.statHeader}>
                 <span className={styles.statLabel}>{t('common.carbs')}</span>
                 <span className={styles.statValue}>
-                  {dailyNutrition.carbs}g / {goals.carbs}g
+                  {dailyNutrition.carbs}{t('units.g', 'g')} / {goals.carbs}{t('units.g', 'g')}
                 </span>
               </div>
               <div className={styles.progressBar}>
@@ -300,7 +301,7 @@ export function DayView() {
               <div className={styles.statHeader}>
                 <span className={styles.statLabel}>{t('common.fat')}</span>
                 <span className={styles.statValue}>
-                  {dailyNutrition.fat}g / {goals.fat}g
+                  {dailyNutrition.fat}{t('units.g', 'g')} / {goals.fat}{t('units.g', 'g')}
                 </span>
               </div>
               <div className={styles.progressBar}>

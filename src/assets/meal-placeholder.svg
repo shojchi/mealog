@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="100" height="100" fill="#f0efed" />
+  
+  <!-- Outer Plate Rim -->
+  <circle cx="50" cy="50" r="35" fill="#ffffff" stroke="#e0deda" stroke-width="2" />
+  
+  <!-- Inner Plate Depth -->
+  <circle cx="50" cy="50" r="25" fill="#f8f7f5" stroke="#ecebe8" stroke-width="1" />
+  
+  <!-- Knife -->
+  <g transform="rotate(15 80 50) translate(80, 25)" fill="#b5c4bf">
+    <path d="M 0,0 C 2,0 3,10 3,25 L 1,50 L -1,50 L -3,25 C -3,10 -2,0 0,0 Z" />
+    <path d="M -1,50 L 1,50 L 1,75 C 1,76 0,77 -1,75 Z" fill="#9baba6" />
+  </g>
+  
+  <!-- Fork -->
+  <g transform="rotate(-15 20 50) translate(20, 25)" fill="#b5c4bf">
+    <!-- Tines -->
+    <rect x="-4" y="0" width="1.5" height="15" rx="0.5" />
+    <rect x="-1" y="0" width="1.5" height="15" rx="0.5" />
+    <rect x="2" y="0" width="1.5" height="15" rx="0.5" />
+    <!-- Base and Handle -->
+    <path d="M -5,15 C -5,22 4,22 4,15 L 4,14 L -5,14 Z" />
+    <path d="M -1.5,21.5 L 0.5,21.5 L 0.5,75 C 0.5,76 -1.5,77 -1.5,75 Z" fill="#9baba6" />
+  </g>
+</svg>

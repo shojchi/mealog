@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { Meal } from '../types';
 import styles from './RecipeModal.module.css';
+import { ImageWithFallback } from './ImageWithFallback';
 
 interface RecipeModalProps {
   meal: Meal | null;
@@ -26,7 +27,7 @@ export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
         <div className={styles.content}>
           {/* Meal Image */}
           <div className={styles.imageContainer}>
-            <img src={meal.image.content} alt={meal.name} className={styles.image} />
+            <ImageWithFallback src={meal.image.content} alt={meal.name} className={styles.image} />
           </div>
 
           {/* Recipe Instructions */}
@@ -78,15 +79,15 @@ export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
               </div>
               <div className={styles.nutritionItem}>
                 <span className={styles.nutritionLabel}>{t('common.protein')}</span>
-                <span className={styles.nutritionValue}>{meal.nutrition.protein}g</span>
+                <span className={styles.nutritionValue}>{meal.nutrition.protein}{t('units.g', 'g')}</span>
               </div>
               <div className={styles.nutritionItem}>
                 <span className={styles.nutritionLabel}>{t('common.carbs')}</span>
-                <span className={styles.nutritionValue}>{meal.nutrition.carbs}g</span>
+                <span className={styles.nutritionValue}>{meal.nutrition.carbs}{t('units.g', 'g')}</span>
               </div>
               <div className={styles.nutritionItem}>
                 <span className={styles.nutritionLabel}>{t('common.fat')}</span>
-                <span className={styles.nutritionValue}>{meal.nutrition.fat}g</span>
+                <span className={styles.nutritionValue}>{meal.nutrition.fat}{t('units.g', 'g')}</span>
               </div>
             </div>
           </section>

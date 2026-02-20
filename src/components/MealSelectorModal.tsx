@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal, MealType } from '../types';
 import styles from './MealSelectorModal.module.css';
+import { ImageWithFallback } from './ImageWithFallback';
 
 interface MealSelectorModalProps {
   isOpen: boolean;
@@ -91,7 +92,7 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
                 className={styles.mealCard}
                 onClick={() => handleSelectMeal(meal.id!)}
               >
-                <img 
+                <ImageWithFallback 
                   src={meal.image.content} 
                   alt={meal.name}
                   className={styles.mealImage}
@@ -100,7 +101,7 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
                   <h3 className={styles.mealName}>{meal.name}</h3>
                   <p className={styles.mealType}>{t(`catalog.filters.${meal.mealType}`, meal.mealType)}</p>
                   <div className={styles.mealNutrition}>
-                    {meal.nutrition.calories} {t('common.caloriesAbbr', 'cal')} • {meal.nutrition.protein}g {t('common.protein')}
+                    {meal.nutrition.calories} {t('common.caloriesAbbr', 'cal')} • {meal.nutrition.protein}{t('units.g', 'g')} {t('common.protein')}
                   </div>
                 </div>
               </div>
