@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useThemeStore } from '../store/themeStore';
+import type { Theme } from '../store/themeStore';
 import styles from './SettingsModal.module.css';
 
 interface SettingsModalProps {
@@ -14,6 +16,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [language, setLanguage] = useState<Language>(() => {
     return (localStorage.getItem('language') as Language) || 'en';
   });
+  const { theme, setTheme } = useThemeStore();
 
   useEffect(() => {
     if (isOpen) {
@@ -66,10 +69,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </select>
           </section>
 
-          {/* Placeholder: Appearance */}
-          <section className={`${styles.section} ${styles.disabled}`}>
+          {/* Appearance Section */}
+          <section className={styles.section}>
             <h3>🎨 {t('settings.appearance')}</h3>
-            <p className={styles.comingSoon}>{t('settings.comingSoon')}</p>
+            <select 
+              value={theme} 
+              onChange={(e) => setTheme(e.target.value as Theme)}
+              className={styles.select}
+            >
+              <option value="system">{t('settings.themeSystem', 'System Preference')}</option>
+              <option value="light">{t('settings.themeLight', 'Light')}</option>
+              <option value="dark">{t('settings.themeDark', 'Dark')}</option>
+            </select>
           </section>
 
           {/* Placeholder: User Profile */}

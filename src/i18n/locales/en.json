@@ -52,6 +52,9 @@
   "settings": {
     "title": "Settings",
     "language": "Language",
+    "themeSystem": "System Preference",
+    "themeLight": "Light",
+    "themeDark": "Dark",
     "appearance": "Appearance",
     "userProfile": "User Profile",
     "notifications": "Notifications",

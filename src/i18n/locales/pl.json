@@ -52,6 +52,9 @@
   "settings": {
     "title": "Ustawienia",
     "language": "Język",
+    "themeSystem": "Preferencje systemowe",
+    "themeLight": "Jasny",
+    "themeDark": "Ciemny",
     "appearance": "Wygląd",
     "userProfile": "Profil",
     "notifications": "Powiadomienia",

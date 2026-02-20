@@ -52,6 +52,9 @@
   "settings": {
     "title": "Налаштування",
     "language": "Мова",
+    "themeSystem": "Системні налаштування",
+    "themeLight": "Світла",
+    "themeDark": "Темна",
     "appearance": "Зовнішній вигляд",
     "userProfile": "Профіль",
     "notifications": "Сповіщення",

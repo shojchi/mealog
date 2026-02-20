@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import './i18n/config';
 import { MealCatalog } from './components/MealCatalog';
@@ -6,6 +6,7 @@ import { WeekView } from './components/WeekView';
 import { DayView } from './components/DayView';
 import { ShoppingListView } from './components/ShoppingListView';
 import { SettingsModal } from './components/SettingsModal';
+import { useThemeStore } from './store/themeStore';
 import styles from './App.module.css';
 
 type View = 'catalog' | 'week' | 'day' | 'shopping';
@@ -15,6 +16,7 @@ function App() {
   const [currentView, setCurrentView] = useState<View>('week');
   const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const { theme } = useThemeStore();
   
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
@@ -22,6 +24,29 @@ function App() {
   const touchEndY = useRef<number>(0);
   
   const tabs: View[] = ['week', 'day', 'shopping', 'catalog'];
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+
+    if (theme === 'system') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.classList.add(systemTheme);
+      
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = (e: MediaQueryListEvent) => {
+        if (useThemeStore.getState().theme === 'system') {
+          root.classList.remove('light', 'dark');
+          root.classList.add(e.matches ? 'dark' : 'light');
+        }
+      };
+      
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    } else {
+      root.classList.add(theme);
+    }
+  }, [theme]);
   
   const navigateToTab = (direction: 'next' | 'prev') => {
     const currentIndex = tabs.indexOf(currentView);
