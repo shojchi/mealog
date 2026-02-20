@@ -20,8 +20,6 @@ export interface Ingredient {
   name: string;
   quantity: number;
   unit: MeasurementUnit;
-  // Price per unit (e.g., price per kg, then calculate for 100g)
-  pricePerUnit?: number;
   category?: IngredientCategory;
 }
 
@@ -110,9 +108,6 @@ export interface Meal {
   // Serving info
   servings: number;
 
-  // Calculated total price (sum of ingredient prices)
-  totalPrice?: number;
-
   // Metadata
   createdAt: Date;
   updatedAt: Date;
@@ -166,7 +161,6 @@ export interface ShoppingListItem {
   totalQuantity: number;
   unit: MeasurementUnit;
   category: IngredientCategory;
-  totalPrice?: number;
   purchased?: boolean;
 }
 
@@ -177,7 +171,6 @@ export interface ShoppingList {
   id: number;
   weekStartDate: number; // Monday timestamp (matches WeeklyPlan.weekStart)
   items: ShoppingListItem[];
-  totalBudget?: number;
   createdAt: Date;
 }
 

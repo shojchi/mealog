@@ -151,10 +151,6 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
     }
 
     try {
-      const totalPrice = ingredients.reduce((sum, ing) => {
-        return sum + (ing.pricePerUnit || 0) * ing.quantity;
-      }, 0);
-
       const mealData: Meal = {
         name: name.trim(),
         description: description.trim(),
@@ -176,7 +172,6 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
         mealType,
         labels: selectedLabels,
         servings,
-        totalPrice,
         createdAt: editMeal?.createdAt || new Date(),
         updatedAt: new Date(),
       };

@@ -101,11 +101,6 @@ export function RecipeModal({ meal, isOpen, onClose }: RecipeModalProps) {
               <div className={styles.detailItem}>
                 <strong>{t('mealForm.servings')}:</strong> {meal.servings}
               </div>
-              {meal.totalPrice && (
-                <div className={styles.detailItem}>
-                  <strong>{t('recipe.cost')}:</strong> ${meal.totalPrice.toFixed(2)}
-                </div>
-              )}
               {meal.labels.length > 0 && (
                 <div className={styles.detailItem}>
                   <strong>{t('mealForm.labels.title')}:</strong>

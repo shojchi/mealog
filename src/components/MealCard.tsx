@@ -63,12 +63,6 @@ export function MealCard({ meal, onClick, onEdit }: MealCardProps) {
           </span>
         </div>
         
-        {/* Price */}
-        {meal.totalPrice && (
-          <div className={styles.price}>
-            ${meal.totalPrice.toFixed(2)}
-          </div>
-        )}
       </div>
     </div>
   );

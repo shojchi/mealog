@@ -120,9 +120,3 @@
   color: var(--color-text-primary);
   font-weight: var(--font-weight-semibold);
 }
-
-.price {
-  font-size: 1.125rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-teal);
-}
