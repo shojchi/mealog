@@ -68,8 +68,10 @@
     "dailyNutrition": "Денна норма",
     "summary": "Підсумок",
     "mealPlanned": "страва запланована",
-    "mealsPlanned": "страв заплановано",
-    "dailyCalories": "від денної норми"
+    "mealsPlanned": "прийомів їжі заплановано",
+    "dailyCalories": "від денної норми калорій",
+    "editGoals": "Редагувати цілі",
+    "nutritionGoals": "Цілі харчування"
   },
   "weekView": {
     "title": "Тижневий план",

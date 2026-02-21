@@ -2,16 +2,19 @@ import { useEffect, useState } from 'react';
 import { addDays, subDays, startOfWeek } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useWeekPlanStore } from '../store/weekPlanStore';
+import { useNutritionStore } from '../store/nutritionStore';
 import { db } from '../db';
 import type { Meal, DayPlan, Nutrition } from '../types';
 import { MealSelectorModal } from './MealSelectorModal';
 import { RecipeModal } from './RecipeModal';
+import { NutritionGoalsModal } from './NutritionGoalsModal';
 import styles from './DayView.module.css';
 import { ImageWithFallback } from './ImageWithFallback';
 
 export function DayView() {
   const { t } = useTranslation();
   const { weeklyPlan, loadWeekPlan, removeMealFromDay, addMealToDay } = useWeekPlanStore();
+  const { goals } = useNutritionStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   
   // Helper to get translated day names
@@ -39,6 +42,7 @@ export function DayView() {
     fat: 0,
   });
   const [modalState, setModalState] = useState({ isOpen: false, dayName: '' });
+  const [isNutritionModalOpen, setIsNutritionModalOpen] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
 
   // Load week plan on mount
@@ -138,15 +142,10 @@ export function DayView() {
     }
   };
 
-  // Nutrition goals (example values)
-  const goals = {
-    calories: 2000,
-    protein: 150,
-    carbs: 250,
-    fat: 65,
+  const getPercentage = (value: number, goal: number) => {
+    if (goal === 0) return 0;
+    return Math.min((value / goal) * 100, 100);
   };
-
-  const getPercentage = (value: number, goal: number) => Math.min((value / goal) * 100, 100);
 
   return (
     <div className={styles.dayView}>
@@ -245,7 +244,17 @@ export function DayView() {
 
         {/* Nutrition Sidebar */}
         <div className={styles.nutritionSidebar}>
-          <h2 className={styles.sectionTitle}>{t('dayView.dailyNutrition', 'Daily Nutrition')}</h2>
+          <div className={styles.sidebarHeader}>
+            <h2 className={styles.sidebarTitle}>{t('dayView.dailyNutrition', 'Daily Nutrition')}</h2>
+            <button
+              className={styles.editButton}
+              onClick={() => setIsNutritionModalOpen(true)}
+              title={t('dayView.editGoals', 'Edit Goals')}
+              aria-label={t('dayView.editGoals', 'Edit Goals')}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            </button>
+          </div>
           
           <div className={styles.nutritionStats}>
             {/* Calories */}
@@ -313,8 +322,7 @@ export function DayView() {
             </div>
           </div>
 
-          {/* Summary */}
-          <div className={styles.summary}>
+        <div className={styles.summary}>
             <h3 className={styles.summaryTitle}>{t('dayView.summary', 'Summary')}</h3>
             <p className={styles.summaryText}>
               {meals.length} {meals.length === 1 ? t('dayView.mealPlanned', 'meal planned') : t('dayView.mealsPlanned', 'meals planned')}
@@ -325,6 +333,11 @@ export function DayView() {
           </div>
         </div>
       </div>
+
+      <NutritionGoalsModal
+        isOpen={isNutritionModalOpen}
+        onClose={() => setIsNutritionModalOpen(false)}
+      />
 
       {/* Meal Selector Modal */}
       <MealSelectorModal

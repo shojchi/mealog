@@ -69,7 +69,9 @@
     "summary": "Summary",
     "mealPlanned": "meal planned",
     "mealsPlanned": "meals planned",
-    "dailyCalories": "of daily calories"
+    "dailyCalories": "of daily calories",
+    "editGoals": "Edit Goals",
+    "nutritionGoals": "Nutrition Goals"
   },
   "weekView": {
     "title": "Weekly Meal Plan",

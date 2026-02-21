@@ -68,8 +68,10 @@
     "dailyNutrition": "Dzienne spożycie",
     "summary": "Podsumowanie",
     "mealPlanned": "posiłek zaplanowany",
-    "mealsPlanned": "posiłki zaplanowane",
-    "dailyCalories": "dziennego limitu"
+    "mealsPlanned": "zaplanowanych posiłków",
+    "dailyCalories": "dziennych kalorii",
+    "editGoals": "Edytuj Cele",
+    "nutritionGoals": "Cele Żywieniowe"
   },
   "weekView": {
     "title": "Tygodniowy plan posiłków",
