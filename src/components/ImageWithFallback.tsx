@@ -6,19 +6,21 @@ interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElemen
 }
 
 export function ImageWithFallback({ src, alt, ...props }: ImageWithFallbackProps) {
-  const [imgSrc, setImgSrc] = useState<string | undefined>(src);
+  const [hasError, setHasError] = useState(false);
+  const [isOffline, setIsOffline] = useState(() => {
+    return typeof navigator !== 'undefined' && !navigator.onLine;
+  });
+
+  const [prevSrc, setPrevSrc] = useState(src);
+
+  if (src !== prevSrc) {
+    setPrevSrc(src);
+    setHasError(false);
+  }
 
   useEffect(() => {
-    const handleOnline = () => setImgSrc(src);
-    const handleOffline = () => setImgSrc(placeholderSvg);
-
-    // Initial check
-    if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      setImgSrc(placeholderSvg);
-    } else {
-      // If src is empty/null, use placeholder
-      setImgSrc(src || placeholderSvg);
-    }
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -27,14 +29,16 @@ export function ImageWithFallback({ src, alt, ...props }: ImageWithFallbackProps
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, [src]);
+  }, []);
+
+  const finalSrc = isOffline || hasError || !src ? placeholderSvg : src;
 
   return (
     <img
       {...props}
-      src={imgSrc}
+      src={finalSrc}
       alt={alt || "Meal image"}
-      onError={() => setImgSrc(placeholderSvg)}
+      onError={() => setHasError(true)}
     />
   );
 }

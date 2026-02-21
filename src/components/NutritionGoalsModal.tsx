@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNutritionStore } from '../store/nutritionStore';
 import styles from './NutritionGoalsModal.module.css';
@@ -15,12 +15,10 @@ export function NutritionGoalsModal({ isOpen, onClose }: Props) {
   // Local state for the form inputs
   const [formData, setFormData] = useState(goals);
 
-  // Sync form data with store whenever modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setFormData(goals);
-    }
-  }, [isOpen, goals]);
+  // Sync form data with store whenever modal opens.
+  // Because this component is conditionally rendered by parent when isOpen is true,
+  // the initial state will always grab the fresh goals when the modal opens.
+  // No useEffect necessary here.
 
   if (!isOpen) return null;
 

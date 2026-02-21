@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '../store/themeStore';
 import type { Theme } from '../store/themeStore';
+import { HouseholdSettings } from './Settings/HouseholdSettings';
 import styles from './SettingsModal.module.css';
 
 interface SettingsModalProps {
@@ -14,17 +15,9 @@ type Language = 'en' | 'ua' | 'pl';
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { t, i18n } = useTranslation();
   const [language, setLanguage] = useState<Language>(() => {
-    return (localStorage.getItem('language') as Language) || 'en';
+    return (i18n.language as Language) || (localStorage.getItem('language') as Language) || 'en';
   });
   const { theme, setTheme } = useThemeStore();
-
-  useEffect(() => {
-    if (isOpen) {
-      // Sync local state with i18n language
-      const currentLang = i18n.language as Language;
-      setLanguage(currentLang);
-    }
-  }, [isOpen, i18n.language]);
 
   if (!isOpen) return null;
 
@@ -83,10 +76,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </select>
           </section>
 
-          {/* Placeholder: User Profile */}
-          <section className={`${styles.section} ${styles.disabled}`}>
-            <h3>👤 {t('settings.userProfile')}</h3>
-            <p className={styles.comingSoon}>{t('settings.comingSoon')}</p>
+          {/* Household Sync Section */}
+          <section className={styles.section}>
+            <HouseholdSettings />
           </section>
 
           {/* Placeholder: Notifications */}

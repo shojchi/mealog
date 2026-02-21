@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { addDays, subDays, startOfWeek } from 'date-fns';
+import { startOfWeek, addDays, subDays, format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useWeekPlanStore } from '../store/weekPlanStore';
 import { useNutritionStore } from '../store/nutritionStore';
 import { db } from '../db';
-import type { Meal, DayPlan, Nutrition } from '../types';
+import type { Meal, Nutrition } from '../types';
 import { MealSelectorModal } from './MealSelectorModal';
 import { RecipeModal } from './RecipeModal';
 import { NutritionGoalsModal } from './NutritionGoalsModal';
@@ -13,7 +13,7 @@ import { ImageWithFallback } from './ImageWithFallback';
 
 export function DayView() {
   const { t } = useTranslation();
-  const { weeklyPlan, loadWeekPlan, removeMealFromDay, addMealToDay } = useWeekPlanStore();
+  const { weeklyPlan, removeMealFromDay, addMealToDay } = useWeekPlanStore();
   const { goals } = useNutritionStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   
@@ -32,8 +32,6 @@ export function DayView() {
     const month = t(`months.short.${months[monthIndex]}`);
     return `${month} ${day}, ${date.getFullYear()}`;
   };
-
-  const [dayPlan, setDayPlan] = useState<DayPlan | null>(null);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [dailyNutrition, setDailyNutrition] = useState<Nutrition>({
     calories: 0,
@@ -41,39 +39,24 @@ export function DayView() {
     carbs: 0,
     fat: 0,
   });
-  const [modalState, setModalState] = useState({ isOpen: false, dayName: '' });
-  const [isNutritionModalOpen, setIsNutritionModalOpen] = useState(false);
+  const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false);
+  const [isMealSelectorOpen, setIsMealSelectorOpen] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
 
-  // Load week plan on mount
-  useEffect(() => {
-    loadWeekPlan();
-  }, [loadWeekPlan]);
-
-  // Find current day's plan from weekly plan
-  useEffect(() => {
-    if (!weeklyPlan) return;
-
-    const monday = startOfWeek(currentDate, { weekStartsOn: 1 });
-    const dayIndex = Math.floor((currentDate.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (dayIndex >= 0 && dayIndex < 7) {
-      setDayPlan(weeklyPlan.days[dayIndex]);
-    } else {
-      setDayPlan(null);
-    }
-  }, [weeklyPlan, currentDate]);
+  const monday = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const dayIndex = Math.floor((currentDate.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24));
+  const dayPlan = weeklyPlan && dayIndex >= 0 && dayIndex < 7 ? weeklyPlan.days[dayIndex] : null;
 
   // Load meal details and calculate nutrition
   useEffect(() => {
-    // If no day plan, clear meals and nutrition
-    if (!dayPlan) {
-      setMeals([]);
-      setDailyNutrition({ calories: 0, protein: 0, carbs: 0, fat: 0 });
-      return;
-    }
-
     const loadMeals = async () => {
+      // If no day plan, clear meals and nutrition
+      if (!dayPlan) {
+        setMeals([]);
+        setDailyNutrition({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+        return;
+      }
+
       const mealIds = dayPlan.meals.map(m => m.mealId);
       const loadedMeals = await db.meals.bulkGet(mealIds);
       const validMeals = loadedMeals.filter((m): m is Meal => m !== undefined);
@@ -120,19 +103,12 @@ export function DayView() {
     }
   };
 
-  const handleOpenModal = () => {
-    setModalState({ isOpen: true, dayName: getDayName(currentDate) });
-  };
-
-  const handleCloseModal = () => {
-    setModalState({ isOpen: false, dayName: '' });
+  const openMealSelector = () => {
+    setIsMealSelectorOpen(true);
   };
 
   const handleSelectMeal = async (mealId: number) => {
     if (!weeklyPlan) return;
-    
-    const monday = startOfWeek(currentDate, { weekStartsOn: 1 });
-    const dayIndex = Math.floor((currentDate.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24));
     
     // Check if within current week
     if (dayIndex >= 0 && dayIndex < 7) {
@@ -177,7 +153,7 @@ export function DayView() {
           {meals.length === 0 ? (
             <div className={styles.emptyState}>
               <p>{t('weekView.noMealsPlanned')}</p>
-              <button onClick={handleOpenModal} className={styles.addButton}>
+              <button onClick={openMealSelector} className={styles.addButton}>
                 + {t('dayView.addFirstMeal')}
               </button>
             </div>
@@ -235,7 +211,7 @@ export function DayView() {
                 </div>
               ))}
 
-              <button onClick={handleOpenModal} className={styles.addAnotherButton}>
+              <button onClick={openMealSelector} className={styles.addAnotherButton}>
                 + {t('dayView.addAnotherMeal', 'Add Another Meal')}
               </button>
             </div>
@@ -248,7 +224,7 @@ export function DayView() {
             <h2 className={styles.sidebarTitle}>{t('dayView.dailyNutrition', 'Daily Nutrition')}</h2>
             <button
               className={styles.editButton}
-              onClick={() => setIsNutritionModalOpen(true)}
+              onClick={() => setIsGoalsModalOpen(true)}
               title={t('dayView.editGoals', 'Edit Goals')}
               aria-label={t('dayView.editGoals', 'Edit Goals')}
             >
@@ -334,25 +310,30 @@ export function DayView() {
         </div>
       </div>
 
-      <NutritionGoalsModal
-        isOpen={isNutritionModalOpen}
-        onClose={() => setIsNutritionModalOpen(false)}
-      />
+      {/* Modals */}
+      {isMealSelectorOpen && (
+        <MealSelectorModal
+          isOpen={isMealSelectorOpen}
+          onClose={() => setIsMealSelectorOpen(false)}
+          onSelectMeal={handleSelectMeal}
+          dayName={t(`weekDays.${currentDate.getDay()}`, format(currentDate, 'EEEE'))}
+        />
+      )}
+      
+      {isGoalsModalOpen && (
+        <NutritionGoalsModal
+          isOpen={isGoalsModalOpen}
+          onClose={() => setIsGoalsModalOpen(false)}
+        />
+      )}
 
-      {/* Meal Selector Modal */}
-      <MealSelectorModal
-        isOpen={modalState.isOpen}
-        onClose={handleCloseModal}
-        onSelectMeal={handleSelectMeal}
-        dayName={modalState.dayName}
-      />
-
-      {/* Recipe View Modal */}
-      <RecipeModal
-        meal={selectedMeal}
-        isOpen={selectedMeal !== null}
-        onClose={() => setSelectedMeal(null)}
-      />
+      {selectedMeal && (
+        <RecipeModal
+          meal={selectedMeal}
+          isOpen={selectedMeal !== null}
+          onClose={() => setSelectedMeal(null)}
+        />
+      )}
     </div>
   );
 }

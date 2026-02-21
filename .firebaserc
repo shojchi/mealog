@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "mealog-a3c9e"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

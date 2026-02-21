@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal, MealType } from '../types';
+import { useAuthStore } from '../store/authStore';
 import styles from './MealSelectorModal.module.css';
 import { ImageWithFallback } from './ImageWithFallback';
 
@@ -14,25 +15,24 @@ interface MealSelectorModalProps {
 
 export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: MealSelectorModalProps) {
   const { t } = useTranslation();
+  const { user } = useAuthStore();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [filter, setFilter] = useState<MealType | 'all'>('all');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (isOpen) {
-      loadMeals();
-    }
-  }, [isOpen, filter]);
-
-  async function loadMeals() {
+  const loadMeals = useCallback(async () => {
+    if (!user) return;
     setLoading(true);
     try {
+      const activeHouseholdId = user.currentHouseholdId;
       let results: Meal[];
       
       if (filter === 'all') {
-        results = await db.meals.toArray();
+        const allMeals = await db.meals.toArray();
+        results = allMeals.filter(m => m.householdId === activeHouseholdId || m.householdId === 'local');
       } else {
-        results = await db.meals.where('mealType').equals(filter).toArray();
+        const filteredMeals = await db.meals.where('mealType').equals(filter).toArray();
+        results = filteredMeals.filter(m => m.householdId === activeHouseholdId || m.householdId === 'local');
       }
       
       setMeals(results);
@@ -41,7 +41,13 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
     } finally {
       setLoading(false);
     }
-  }
+  }, [user, filter]);
+
+  useEffect(() => {
+    if (isOpen) {
+      loadMeals();
+    }
+  }, [isOpen, loadMeals]);
 
   const handleSelectMeal = (mealId: number) => {
     onSelectMeal(mealId);

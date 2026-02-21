@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import type { WeeklyPlan, DayPlan, ScheduledMeal } from "../types";
-import { db } from "../db";
+import { db, getCurrentWeekPlan } from "../db/database";
 import { startOfWeek, addDays } from "date-fns";
+import { useAuthStore } from "./authStore";
+import { pushUpSync } from "../services/sync";
 
 interface WeekPlanState {
   currentWeek: Date;
@@ -29,14 +31,12 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
 
   loadWeekPlan: async () => {
     set({ loading: true });
-    const { currentWeek } = get();
+    const { user } = useAuthStore.getState();
+    const householdId = user?.currentHouseholdId;
 
     try {
-      // Try to find existing plan for this week
-      const existingPlan = await db.weeklyPlans
-        .where("weekStart")
-        .equals(currentWeek.getTime())
-        .first();
+      // Try to find existing plan for this week using our updated helper
+      const existingPlan = await getCurrentWeekPlan(householdId);
 
       if (existingPlan) {
         set({ weeklyPlan: existingPlan, loading: false });
@@ -52,6 +52,8 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
 
   createEmptyWeek: async () => {
     const { currentWeek } = get();
+    const { user } = useAuthStore.getState();
+    const householdId = user?.currentHouseholdId || "local";
 
     // Create 7 empty days
     const days: DayPlan[] = Array.from({ length: 7 }, (_, i) => ({
@@ -60,16 +62,20 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
     }));
 
     const newPlan: Omit<WeeklyPlan, "id"> = {
+      householdId,
       weekStart: currentWeek.getTime(), // Store as timestamp, not Date
       days,
       createdAt: new Date(),
       updatedAt: new Date(),
+      dirty: true,
+      lastUpdated: Date.now(),
     };
 
     try {
       const id = await db.weeklyPlans.add(newPlan as WeeklyPlan);
       const createdPlan = await db.weeklyPlans.get(id);
       set({ weeklyPlan: createdPlan || null, loading: false });
+      pushUpSync();
     } catch (error) {
       console.error("Failed to create week plan:", error);
       set({ loading: false });
@@ -79,6 +85,9 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
   addMealToDay: async (dayIndex: number, mealId: number) => {
     const { weeklyPlan } = get();
     if (!weeklyPlan) return;
+
+    const { user } = useAuthStore.getState();
+    const householdId = user?.currentHouseholdId || "local";
 
     const newMeal: ScheduledMeal = {
       mealId,
@@ -95,14 +104,21 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
       ...weeklyPlan,
       days: updatedDays,
       updatedAt: new Date(),
+      householdId,
+      dirty: true,
+      lastUpdated: Date.now(),
     };
 
     try {
       await db.weeklyPlans.update(weeklyPlan.id!, {
         days: updatedDays,
         updatedAt: new Date(),
+        householdId,
+        dirty: true,
+        lastUpdated: Date.now(),
       });
       set({ weeklyPlan: updatedPlan });
+      pushUpSync();
     } catch (error) {
       console.error("Failed to add meal:", error);
     }
@@ -111,6 +127,9 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
   removeMealFromDay: async (dayIndex: number, mealIndex: number) => {
     const { weeklyPlan } = get();
     if (!weeklyPlan) return;
+
+    const { user } = useAuthStore.getState();
+    const householdId = user?.currentHouseholdId || "local";
 
     const updatedDays = [...weeklyPlan.days];
     const dayMeals = [...updatedDays[dayIndex].meals];
@@ -125,14 +144,21 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
       ...weeklyPlan,
       days: updatedDays,
       updatedAt: new Date(),
+      householdId,
+      dirty: true,
+      lastUpdated: Date.now(),
     };
 
     try {
       await db.weeklyPlans.update(weeklyPlan.id!, {
         days: updatedDays,
         updatedAt: new Date(),
+        householdId,
+        dirty: true,
+        lastUpdated: Date.now(),
       });
       set({ weeklyPlan: updatedPlan });
+      pushUpSync();
     } catch (error) {
       console.error("Failed to remove meal:", error);
     }

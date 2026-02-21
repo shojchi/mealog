@@ -108,7 +108,10 @@ export interface Meal {
   // Serving info
   servings: number;
 
-  // Metadata
+  // Sync Metadata
+  householdId?: string; // Links to Firestore household
+  lastUpdated?: number; // Timestamp for sync resolution
+  dirty?: boolean; // True if needs syncing to Firestore
   createdAt: Date;
   updatedAt: Date;
 }
@@ -147,9 +150,31 @@ export interface WeeklyPlan {
   weekStart: number; // Monday timestamp (stored as number for IndexedDB queries)
   days: DayPlan[]; // 7 days
 
-  // Metadata
+  // Sync Metadata
+  householdId?: string; // Links to Firestore household
+  lastUpdated?: number; // Timestamp for sync resolution
+  dirty?: boolean; // True if needs syncing to Firestore
   createdAt: Date;
   updatedAt: Date;
+}
+
+/**
+ * User Profile (Firestore representation)
+ */
+export interface UserProfile {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  currentHouseholdId: string;
+}
+
+/**
+ * Household (Firestore representation)
+ */
+export interface Household {
+  id: string;
+  name: string;
+  members: string[]; // Array of uids
 }
 
 /**

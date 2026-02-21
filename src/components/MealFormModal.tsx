@@ -1,8 +1,10 @@
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal, Ingredient, MealType, MealLabel, MeasurementUnit, IngredientCategory } from '../types';
 import styles from './MealFormModal.module.css';
+import { useAuthStore } from '../store/authStore';
+import { pushUpSync } from '../services/sync';
 import { ImageWithFallback } from './ImageWithFallback';
 import placeholderSvg from '../assets/meal-placeholder.svg';
 
@@ -15,69 +17,53 @@ interface MealFormModalProps {
 
 export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealFormModalProps) {
   const { t } = useTranslation();
+  const { user } = useAuthStore();
   // Basic info
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [mealType, setMealType] = useState<MealType>('breakfast');
-  const [servings, setServings] = useState<string | number>('1');
+  const [name, setName] = useState(editMeal?.name || '');
+  const [description, setDescription] = useState(editMeal?.description || '');
+  const [mealType, setMealType] = useState<MealType>(editMeal?.mealType || 'breakfast');
+  const [servings, setServings] = useState<string | number>(editMeal?.servings.toString() || '1');
   
   // Image
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState(editMeal?.image.content || '');
   
   // Ingredients
   type FormIngredient = Omit<Ingredient, 'quantity'> & { quantity: string | number };
-  const [ingredients, setIngredients] = useState<FormIngredient[]>([
-    { name: '', quantity: '0', unit: 'g', category: 'other' },
-  ]);
+  const [ingredients, setIngredients] = useState<FormIngredient[]>(
+    editMeal && editMeal.ingredients.length > 0 
+      ? editMeal.ingredients.map(i => ({ ...i, quantity: i.quantity.toString() })) 
+      : [{ name: '', quantity: '0', unit: 'g', category: 'other' }]
+  );
   
   // Nutrition
-  const [calories, setCalories] = useState<string | number>('0');
-  const [protein, setProtein] = useState<string | number>('0');
-  const [carbs, setCarbs] = useState<string | number>('0');
-  const [fat, setFat] = useState<string | number>('0');
-  
+  const [calories, setCalories] = useState<string | number>(editMeal?.nutrition.calories.toString() || '0');
+  const [protein, setProtein] = useState<string | number>(editMeal?.nutrition.protein.toString() || '0');
+  const [carbs, setCarbs] = useState<string | number>(editMeal?.nutrition.carbs.toString() || '0');
+  const [fat, setFat] = useState<string | number>(editMeal?.nutrition.fat.toString() || '0');
   // Recipe
-  const [recipeType, setRecipeType] = useState<'url' | 'text'>('text');
-  const [recipeContent, setRecipeContent] = useState('');
+  const [recipeType, setRecipeType] = useState<'url' | 'text'>(editMeal?.recipe.type || 'text');
+  const [recipeContent, setRecipeContent] = useState(editMeal?.recipe.content || '');
   
   // Labels
-  const [selectedLabels, setSelectedLabels] = useState<MealLabel[]>([]);
-  const [customLabels, setCustomLabels] = useState<string[]>([]);
+  const [selectedLabels, setSelectedLabels] = useState<MealLabel[]>(editMeal?.labels || []);
   const [showLabelModal, setShowLabelModal] = useState(false);
   const [newLabelInput, setNewLabelInput] = useState('');
   
   const [error, setError] = useState('');
-
-  // Load custom labels from localStorage
-  useEffect(() => {
+  
+  const [customLabels, setCustomLabels] = useState<string[]>(() => {
     const stored = localStorage.getItem('customLabels');
     if (stored) {
       try {
-        setCustomLabels(JSON.parse(stored));
+        return JSON.parse(stored);
       } catch (e) {
         console.error('Failed to parse custom labels:', e);
       }
     }
-  }, []);
+    return [];
+  });
 
-  // Pre-fill form when editing
-  useEffect(() => {
-    if (editMeal) {
-      setName(editMeal.name);
-      setDescription(editMeal.description);
-      setMealType(editMeal.mealType);
-      setServings(editMeal.servings.toString());
-      setImageUrl(editMeal.image.content);
-      setIngredients(editMeal.ingredients.length > 0 ? editMeal.ingredients.map(i => ({ ...i, quantity: i.quantity.toString() })) : [{ name: '', quantity: '0', unit: 'g', category: 'other' }]);
-      setCalories(editMeal.nutrition.calories.toString());
-      setProtein(editMeal.nutrition.protein.toString());
-      setCarbs(editMeal.nutrition.carbs.toString());
-      setFat(editMeal.nutrition.fat.toString());
-      setRecipeType(editMeal.recipe.type);
-      setRecipeContent(editMeal.recipe.content);
-      setSelectedLabels(editMeal.labels);
-    }
-  }, [editMeal]);
+  // Pre-fill form when editing (No longer needed, state is initialized with editMeal since modal is conditionally rendered)
 
   if (!isOpen) return null;
 
@@ -111,7 +97,7 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
     setIngredients(ingredients.filter((_, i) => i !== index));
   };
 
-  const updateIngredient = (index: number, field: keyof Ingredient, value: any) => {
+  const updateIngredient = <K extends keyof Ingredient>(index: number, field: K, value: Ingredient[K]) => {
     const updated = [...ingredients];
     updated[index] = { ...updated[index], [field]: value };
     setIngredients(updated);
@@ -157,6 +143,11 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
     e.preventDefault();
     setError('');
 
+    if (!user) {
+      setError('You must be logged in to save meals.');
+      return;
+    }
+
     // Validation
     if (!name.trim()) {
       setError(t('mealForm.validation.nameRequired', 'Meal name is required'));
@@ -193,6 +184,11 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
         servings: Number(servings) || 1,
         createdAt: editMeal?.createdAt || new Date(),
         updatedAt: new Date(),
+        
+        // Sync Data
+        householdId: user.currentHouseholdId,
+        dirty: true,
+        lastUpdated: new Date().getTime()
       };
 
       if (editMeal) {
@@ -206,6 +202,10 @@ export function MealFormModal({ isOpen, onClose, onSuccess, editMeal }: MealForm
       onSuccess();
       resetForm();
       onClose();
+      
+      // Attempt background push immediately
+      pushUpSync();
+
     } catch (err) {
       console.error(`Failed to ${editMeal ? 'update' : 'create'} meal:`, err);
       setError(editMeal ? t('mealForm.validation.updateFailed', 'Failed to update meal') : t('mealForm.validation.createFailed', 'Failed to create meal'));

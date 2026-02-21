@@ -6,7 +6,12 @@ import { WeekView } from './components/WeekView';
 import { DayView } from './components/DayView';
 import { ShoppingListView } from './components/ShoppingListView';
 import { SettingsModal } from './components/SettingsModal';
+import { LoginScreen } from './components/LoginScreen';
 import { useThemeStore } from './store/themeStore';
+import { useAuthStore } from './store/authStore';
+import { subscribeToAuth, logOut } from './services/auth';
+import { initializeUserRecord } from './services/db';
+import { startDownSync, stopDownSync, pushUpSync } from './services/sync';
 import styles from './App.module.css';
 
 type View = 'catalog' | 'week' | 'day' | 'shopping';
@@ -17,6 +22,7 @@ function App() {
   const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const { theme } = useThemeStore();
+  const { user, loading: authLoading, setUser, setLoading } = useAuthStore();
   
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
@@ -24,6 +30,41 @@ function App() {
   const touchEndY = useRef<number>(0);
   
   const tabs: View[] = ['week', 'day', 'shopping', 'catalog'];
+
+  // Firebase Auth Subscription
+  useEffect(() => {
+    const unsubscribe = subscribeToAuth(async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          // Fetch or initialize user profile in Firestore
+          const userProfile = await initializeUserRecord(
+            firebaseUser.uid,
+            firebaseUser.email,
+            firebaseUser.displayName
+          );
+          setUser(userProfile);
+          
+          // Start syncing for their active household
+          startDownSync(userProfile.currentHouseholdId);
+          pushUpSync(); // Try pushing any local data right away
+
+        } catch (error) {
+          console.error("Failed to initialize user record:", error);
+          setUser(null);
+          stopDownSync();
+        }
+      } else {
+        setUser(null);
+        stopDownSync();
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      unsubscribe();
+      stopDownSync();
+    };
+  }, [setUser, setLoading]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -131,6 +172,20 @@ function App() {
   };
 
 
+  // Wait for Firebase to check session
+  if (authLoading) {
+    return (
+      <div className={styles.app} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  // Not logged in -> Show Login Screen
+  if (!user) {
+    return <LoginScreen />;
+  }
+
   return (
     <div className={styles.app}>
       {/* Top Navigation */}
@@ -165,13 +220,22 @@ function App() {
             </button>
           </div>
 
-          <button 
-            className={styles.settingsButton}
-            onClick={() => setShowSettings(true)}
-            aria-label="Open settings"
-          >
-            ⚙️
-          </button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button 
+              className={styles.navButton}
+              onClick={logOut}
+              aria-label="Log out"
+            >
+              Sign Out
+            </button>
+            <button 
+              className={styles.settingsButton}
+              onClick={() => setShowSettings(true)}
+              aria-label="Open settings"
+            >
+              ⚙️
+            </button>
+          </div>
         </div>
       </nav>
 

@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal } from '../types';
 import { MealCard } from './MealCard';
 import { MealFormModal } from './MealFormModal';
 import { RecipeModal } from './RecipeModal';
+import { useAuthStore } from '../store/authStore';
 import styles from './MealCatalog.module.css';
 
 export function MealCatalog() {
   const { t } = useTranslation();
+  const { user } = useAuthStore();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
@@ -16,22 +18,27 @@ export function MealCatalog() {
   const [editingMeal, setEditingMeal] = useState<Meal | null>(null);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
 
-  useEffect(() => {
-    loadMeals();
-  }, [filter]);
-
-  async function loadMeals() {
+  const loadMeals = useCallback(async () => {
+    if (!user) {
+      setMeals([]); // Clear meals if no user
+      setLoading(false);
+      return;
+    }
     setLoading(true);
+
     try {
+      const activeHouseholdId = user.currentHouseholdId;
       let results: Meal[];
       
       if (filter === 'all') {
-        results = await db.meals.toArray();
+        const allMeals = await db.meals.toArray();
+        results = allMeals.filter(m => m.householdId === activeHouseholdId || m.householdId === 'local');
       } else {
-        results = await db.meals
+        const filteredMeals = await db.meals
           .where('mealType')
           .equals(filter)
           .toArray();
+        results = filteredMeals.filter(m => m.householdId === activeHouseholdId || m.householdId === 'local');
       }
       
       setMeals(results);
@@ -40,7 +47,11 @@ export function MealCatalog() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [filter, user]);
+
+  useEffect(() => {
+    loadMeals();
+  }, [filter, user, loadMeals]);
 
   const handleEdit = (meal: Meal) => {
     setEditingMeal(meal);
@@ -115,19 +126,23 @@ export function MealCatalog() {
       )}
 
       {/* Create/Edit Meal Modal */}
-      <MealFormModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSuccess={() => loadMeals()}
-        editMeal={editingMeal}
-      />
+      {isModalOpen && (
+        <MealFormModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSuccess={() => loadMeals()}
+          editMeal={editingMeal}
+        />
+      )}
 
       {/* Recipe View Modal */}
-      <RecipeModal
-        meal={selectedMeal}
-        isOpen={selectedMeal !== null}
-        onClose={() => setSelectedMeal(null)}
-      />
+      {selectedMeal !== null && (
+        <RecipeModal
+          meal={selectedMeal}
+          isOpen={selectedMeal !== null}
+          onClose={() => setSelectedMeal(null)}
+        />
+      )}
     </div>
   );
 }
