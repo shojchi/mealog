@@ -1,6 +1,6 @@
 # Mealog
 
-A PWA for weekly meal planning with nutrition tracking and grocery budgeting. App created using Antigravity.
+A PWA for weekly meal planning with nutrition tracking and grocery budgeting. Built with Antigravity.
 
 ## Tech Stack
 
