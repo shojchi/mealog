@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { seedDatabase } from './db'
-import { analytics } from './firebase'
+import './firebase'
 
 // Initialize database with seed data
 seedDatabase().catch(console.error);
