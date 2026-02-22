@@ -37,6 +37,25 @@ export function startDownSync(householdId: string) {
       if (change.type === "added" || change.type === "modified") {
         const localMeal = localMealsMap.get(firestoreMeal.id);
 
+        // Convert Firestore Timestamps to JS Dates
+        if (
+          firestoreMeal.createdAt &&
+          typeof (firestoreMeal.createdAt as any).toDate === "function"
+        ) {
+          firestoreMeal.createdAt = (firestoreMeal.createdAt as any).toDate();
+        } else if (typeof firestoreMeal.createdAt === "string") {
+          firestoreMeal.createdAt = new Date(firestoreMeal.createdAt);
+        }
+
+        if (
+          firestoreMeal.updatedAt &&
+          typeof (firestoreMeal.updatedAt as any).toDate === "function"
+        ) {
+          firestoreMeal.updatedAt = (firestoreMeal.updatedAt as any).toDate();
+        } else if (typeof firestoreMeal.updatedAt === "string") {
+          firestoreMeal.updatedAt = new Date(firestoreMeal.updatedAt);
+        }
+
         // Conflict Resolution: Last-Write-Wins
         if (
           !localMeal ||
@@ -68,6 +87,35 @@ export function startDownSync(householdId: string) {
 
       if (change.type === "added" || change.type === "modified") {
         const localPlan = localPlansMap.get(firestorePlan.id);
+
+        // Convert Firestore Timestamps to JS Dates
+        if (
+          firestorePlan.createdAt &&
+          typeof (firestorePlan.createdAt as any).toDate === "function"
+        ) {
+          firestorePlan.createdAt = (firestorePlan.createdAt as any).toDate();
+        } else if (typeof firestorePlan.createdAt === "string") {
+          firestorePlan.createdAt = new Date(firestorePlan.createdAt);
+        }
+
+        if (
+          firestorePlan.updatedAt &&
+          typeof (firestorePlan.updatedAt as any).toDate === "function"
+        ) {
+          firestorePlan.updatedAt = (firestorePlan.updatedAt as any).toDate();
+        } else if (typeof firestorePlan.updatedAt === "string") {
+          firestorePlan.updatedAt = new Date(firestorePlan.updatedAt);
+        }
+
+        if (firestorePlan.days && Array.isArray(firestorePlan.days)) {
+          firestorePlan.days = firestorePlan.days.map((day) => ({
+            ...day,
+            date:
+              day.date && typeof (day.date as any).toDate === "function"
+                ? (day.date as any).toDate()
+                : new Date(day.date),
+          }));
+        }
 
         if (
           !localPlan ||

@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { db } from '../../services/db';
 import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import styles from './HouseholdSettings.module.css';
 
 export function HouseholdSettings() {
+  const { t } = useTranslation();
   const { user, setUser } = useAuthStore();
   const [joinCode, setJoinCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +19,7 @@ export function HouseholdSettings() {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(currentHouseholdId);
-    setSuccess('Invite code copied to clipboard!');
+    setSuccess(t('householdSettings.yourCode.success'));
     setTimeout(() => setSuccess(null), 3000);
   };
 
@@ -28,15 +30,15 @@ export function HouseholdSettings() {
     setSuccess(null);
 
     try {
-      if (!joinCode.trim()) throw new Error('Please enter a valid code');
-      if (joinCode === currentHouseholdId) throw new Error('You are already in this household');
+      if (!joinCode.trim()) throw new Error(t('householdSettings.join.errors.invalid'));
+      if (joinCode === currentHouseholdId) throw new Error(t('householdSettings.join.errors.alreadyIn'));
 
       // Check if household exists
       const householdRef = doc(db, 'households', joinCode);
       const householdSnap = await getDoc(householdRef);
 
       if (!householdSnap.exists()) {
-        throw new Error('Household not found. Please check the code.');
+        throw new Error(t('householdSettings.join.errors.notFound'));
       }
 
       // Add user to new household
@@ -53,7 +55,7 @@ export function HouseholdSettings() {
       // Update local state
       setUser({ ...user, currentHouseholdId: joinCode });
       
-      setSuccess('Successfully joined household!');
+      setSuccess(t('householdSettings.join.success'));
       setJoinCode('');
       
       // Note: A real app might want to trigger a full re-sync here
@@ -64,7 +66,7 @@ export function HouseholdSettings() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('An unexpected error occurred');
+        setError(t('householdSettings.join.errors.unexpected'));
       }
     } finally {
       setIsLoading(false);
@@ -73,37 +75,39 @@ export function HouseholdSettings() {
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>🏠 Household Sync</h3>
+      <h3 className={styles.title}>{t('householdSettings.title')}</h3>
       <p className={styles.description}>
-        Share your catalog and week plans with others by joining the same household.
+        {t('householdSettings.description')}
       </p>
 
       {error && <div className={styles.error}>{error}</div>}
       {success && <div className={styles.success}>{success}</div>}
 
       <div className={styles.card}>
-        <h4>Your Invite Code</h4>
-        <p className={styles.subtext}>Share this code with someone to let them join your household.</p>
+        <h4>{t('householdSettings.yourCode.title')}</h4>
+        <p className={styles.subtext}>{t('householdSettings.yourCode.subtitle')}</p>
         <div className={styles.codeRow}>
           <code className={styles.code}>{currentHouseholdId}</code>
-          <button onClick={handleCopyCode} className={styles.copyButton}>Copy</button>
+          <button onClick={handleCopyCode} className={styles.copyButton}>
+            {t('householdSettings.yourCode.copy')}
+          </button>
         </div>
       </div>
 
       <div className={styles.card}>
-        <h4>Join a Household</h4>
-        <p className={styles.subtext}>Enter someone else's invite code to join their household. (Note: You will switch to their catalog)</p>
+        <h4>{t('householdSettings.join.title')}</h4>
+        <p className={styles.subtext}>{t('householdSettings.join.subtitle')}</p>
         <form onSubmit={handleJoinHousehold} className={styles.joinForm}>
           <input 
             type="text" 
             value={joinCode}
             onChange={(e) => setJoinCode(e.target.value)}
-            placeholder="Paste invite code..."
+            placeholder={t('householdSettings.join.placeholder')}
             className={styles.input}
             disabled={isLoading}
           />
           <button type="submit" className={styles.joinButton} disabled={isLoading || !joinCode}>
-            {isLoading ? '...' : 'Join'}
+            {isLoading ? '...' : t('householdSettings.join.button')}
           </button>
         </form>
       </div>

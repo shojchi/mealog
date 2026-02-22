@@ -61,6 +61,29 @@
     "dataManagement": "Zarządzanie danymi",
     "close": "Zamknij"
   },
+  "householdSettings": {
+    "title": "🏠 Synchronizacja domowników",
+    "description": "Udostępnij swój katalog i plany tygodniowe innym, dołączając do tego samego gospodarstwa domowego.",
+    "yourCode": {
+      "title": "Twój kod zaproszenia",
+      "subtitle": "Udostępnij ten kod komuś, aby mógł dołączyć do Twojego gospodarstwa.",
+      "copy": "Kopiuj",
+      "success": "Kod zaproszenia skopiowany do schowka!"
+    },
+    "join": {
+      "title": "Dołącz do gospodarstwa",
+      "subtitle": "Wprowadź czyjś kod zaproszenia, aby dołączyć do jego gospodarstwa. (Uwaga: przełączysz się na jego katalog)",
+      "placeholder": "Wklej kod zaproszenia...",
+      "button": "Dołącz",
+      "success": "Pomyślnie dołączono do gospodarstwa!",
+      "errors": {
+        "invalid": "Wprowadź prawidłowy kod",
+        "alreadyIn": "Jesteś już w tym gospodarstwie",
+        "notFound": "Nie znaleziono gospodarstwa. Sprawdź kod.",
+        "unexpected": "Wystąpił nieoczekiwany błąd"
+      }
+    }
+  },
   "dayView": {
     "today": "Dzisiaj",
     "addFirstMeal": "Dodaj pierwszy posiłek",
@@ -174,5 +197,17 @@
     "tbsp": "łyżka",
     "tsp": "łyżeczka",
     "cup": "szkl."
+  },
+  "auth": {
+    "welcomeBack": "Witamy z powrotem! Proszę się zalogować.",
+    "createAccount": "Utwórz konto, aby rozpocząć synchronizację.",
+    "email": "E-mail",
+    "password": "Hasło",
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "signInWithGoogle": "Zaloguj się przez Google",
+    "or": "lub",
+    "dontHaveAccount": "Nie masz konta?",
+    "alreadyHaveAccount": "Masz już konto?"
   }
 }

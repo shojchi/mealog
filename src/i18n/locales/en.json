@@ -61,6 +61,29 @@
     "dataManagement": "Data Management",
     "close": "Close"
   },
+  "householdSettings": {
+    "title": "🏠 Household Sync",
+    "description": "Share your catalog and week plans with others by joining the same household.",
+    "yourCode": {
+      "title": "Your Invite Code",
+      "subtitle": "Share this code with someone to let them join your household.",
+      "copy": "Copy",
+      "success": "Invite code copied to clipboard!"
+    },
+    "join": {
+      "title": "Join a Household",
+      "subtitle": "Enter someone else's invite code to join their household. (Note: You will switch to their catalog)",
+      "placeholder": "Paste invite code...",
+      "button": "Join",
+      "success": "Successfully joined household!",
+      "errors": {
+        "invalid": "Please enter a valid code",
+        "alreadyIn": "You are already in this household",
+        "notFound": "Household not found. Please check the code.",
+        "unexpected": "An unexpected error occurred"
+      }
+    }
+  },
   "dayView": {
     "today": "Today",
     "addFirstMeal": "Add first meal",
@@ -174,5 +197,17 @@
     "tbsp": "tbsp",
     "tsp": "tsp",
     "cup": "cup"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back! Please sign in.",
+    "createAccount": "Create an account to start syncing.",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signInWithGoogle": "Sign in with Google",
+    "or": "or",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?"
   }
 }

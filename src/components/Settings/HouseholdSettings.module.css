@@ -7,32 +7,37 @@
 .title {
   margin: 0;
   font-size: 1.1rem;
-  color: var(--text-primary);
+  color: var(--color-text-primary, #2d2d2d);
 }
 
 .description {
   margin: 0 0 0.5rem 0;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary, #6b6b6b);
 }
 
 .card {
-  background: var(--bg-tertiary, rgba(0,0,0,0.03));
+  background: var(--color-white, rgba(255, 255, 255, 0.5));
   border-radius: 8px;
   padding: 1rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(107, 158, 158, 0.2);
+}
+
+:global(.dark) .card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card h4 {
   margin: 0 0 0.25rem 0;
   font-size: 1rem;
-  color: var(--text-primary);
+  color: var(--color-text-primary, #2d2d2d);
 }
 
 .subtext {
   margin: 0 0 1rem 0;
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary, #6b6b6b);
 }
 
 .codeRow {
@@ -43,17 +48,23 @@
 
 .code {
   flex: 1;
-  background: var(--bg-primary);
+  background: var(--color-white, #ffffff);
+  color: var(--color-text-primary, #2d2d2d);
   padding: 0.5rem;
   border-radius: 4px;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(107, 158, 158, 0.3);
   font-family: monospace;
   font-size: 0.85rem;
   word-break: break-all;
 }
 
+:global(.dark) .code {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 .copyButton {
-  background: var(--accent-primary);
+  background: var(--color-teal);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -73,18 +84,23 @@
 
 .input {
   flex: 1;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  background: var(--color-white, #ffffff);
+  color: var(--color-text-primary, #2d2d2d);
+  border: 1px solid rgba(107, 158, 158, 0.3);
   padding: 0.5rem;
   border-radius: 4px;
   font-size: 0.9rem;
 }
 
+:global(.dark) .input {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 .joinButton {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  background: var(--color-teal);
+  color: white;
+  border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
