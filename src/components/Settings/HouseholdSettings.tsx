@@ -190,6 +190,40 @@ export function HouseholdSettings() {
           </button>
         </div>
       )}
+
+      {/* Support Section */}
+      <div className={styles.card}>
+        <h4>{t('householdSettings.support.title', 'Support & Help')}</h4>
+        <p className={styles.subtext}>{t('householdSettings.support.description', 'Need help using MeaLog or have an idea?')}</p>
+        
+        <div className={styles.linkList}>
+          <a 
+            href="https://mealog.featurebase.app/en/help/articles/7391838" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={styles.supportLink}
+          >
+            <span className={styles.linkIcon}>📱</span>
+            <div className={styles.linkContent}>
+              <span className={styles.linkTitle}>{t('householdSettings.support.pwaLink', 'How to install the App on mobile')}</span>
+              <span className={styles.linkDescription}>{t('householdSettings.support.pwaDesc', 'Step-by-step installation guide for iOS and Android')}</span>
+            </div>
+          </a>
+          
+          <a 
+            href="https://mealog.featurebase.app" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={styles.supportLink}
+          >
+            <span className={styles.linkIcon}>💡</span>
+            <div className={styles.linkContent}>
+              <span className={styles.linkTitle}>{t('householdSettings.support.feedbackLink', 'Give Feedback or Request Features')}</span>
+              <span className={styles.linkDescription}>{t('householdSettings.support.feedbackDesc', 'Help us improve by sharing your ideas')}</span>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

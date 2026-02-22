@@ -91,6 +91,14 @@
       "confirm": "Czy na pewno chcesz opuścić to gospodarstwo domowe? Powrócisz do swojej osobistej przestrzeni roboczej.",
       "success": "Pomyślnie opuszczono gospodarstwo domowe!",
       "error": "Wystąpił błąd podczas opuszczania."
+    },
+    "support": {
+      "title": "Wsparcie i Pomoc",
+      "description": "Potrzebujesz pomocy z MeaLog lub masz pomysł?",
+      "pwaLink": "Jak zainstalować aplikację na telefonie",
+      "pwaDesc": "Przewodnik instalacji krok po kroku dla iOS i Android",
+      "feedbackLink": "Zostaw opinię lub zgłoś funkcję",
+      "feedbackDesc": "Pomóż nam ulepszyć aplikację dzieląc się pomysłami"
     }
   },
   "dayView": {

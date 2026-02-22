@@ -91,6 +91,14 @@
       "confirm": "Are you sure you want to leave this household? You will return to your personal workspace.",
       "success": "Successfully left the household!",
       "error": "An error occurred while leaving."
+    },
+    "support": {
+      "title": "Support & Help",
+      "description": "Need help using MeaLog or have an idea?",
+      "pwaLink": "How to install the App on mobile",
+      "pwaDesc": "Step-by-step installation guide for iOS and Android",
+      "feedbackLink": "Give Feedback or Request Features",
+      "feedbackDesc": "Help us improve by sharing your ideas"
     }
   },
   "dayView": {

@@ -158,3 +158,66 @@
   padding: 0.5rem;
   border-radius: 4px;
 }
+
+/* Support Links */
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.supportLink {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: var(--color-white, #ffffff);
+  border: 1px solid rgba(107, 158, 158, 0.15); /* Subtle teal border for definition */
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+:global(.dark) .supportLink {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.supportLink:hover {
+  transform: translateY(-2px);
+  background-color: var(--color-cream, #f8f6f3);
+  border-color: rgba(107, 158, 158, 0.3);
+  box-shadow: 0 4px 12px rgba(107, 158, 158, 0.1);
+}
+
+:global(.dark) .supportLink:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.linkIcon {
+  font-size: 1.5rem;
+}
+
+.linkContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.linkTitle {
+  font-weight: 600;
+  color: var(--color-teal, #6b9e9e);
+  font-size: 1rem;
+}
+
+:global(.dark) .linkTitle {
+  color: var(--color-teal-light, #8fb8b8);
+}
+
+.linkDescription {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary, #6b6b6b);
+}
