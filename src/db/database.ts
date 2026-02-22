@@ -91,12 +91,15 @@ export async function getMealsByLabel(label: string, householdId?: string) {
 }
 
 /**
- * Helper function to get current week's plan
+ * Helper function to get week plan for a specific date
  */
-export async function getCurrentWeekPlan(householdId?: string) {
-  const now = new Date();
+export async function getCurrentWeekPlan(
+  householdId?: string,
+  targetDate?: Date,
+) {
+  const now = targetDate || new Date();
   const monday = new Date(now);
-  monday.setDate(now.getDate() - now.getDay() + 1); // Get Monday
+  monday.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1)); // Handle Sunday as end of week
   monday.setHours(0, 0, 0, 0);
 
   const query = db.weeklyPlans.where("weekStart").equals(monday.getTime());

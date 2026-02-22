@@ -33,10 +33,11 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
     set({ loading: true });
     const { user } = useAuthStore.getState();
     const householdId = user?.currentHouseholdId;
+    const { currentWeek } = get();
 
     try {
       // Try to find existing plan for this week using our updated helper
-      const existingPlan = await getCurrentWeekPlan(householdId);
+      const existingPlan = await getCurrentWeekPlan(householdId, currentWeek);
 
       if (existingPlan) {
         set({ weeklyPlan: existingPlan, loading: false });
@@ -63,7 +64,7 @@ export const useWeekPlanStore = create<WeekPlanState>((set, get) => ({
 
     const newPlan: Omit<WeeklyPlan, "id"> = {
       householdId,
-      weekStart: currentWeek.getTime(), // Store as timestamp, not Date
+      weekStart: currentWeek.getTime(), // ALREADY SET TO MONDAY IN setCurrentWeek
       days,
       createdAt: new Date(),
       updatedAt: new Date(),
