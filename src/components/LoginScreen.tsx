@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/auth';
+import { signInWithGoogle, /* signInWithEmail, signUpWithEmail */ } from '../services/auth';
 import styles from './LoginScreen.module.css'; // You'll create this CSS module next
 
 export function LoginScreen() {
   const { t } = useTranslation();
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [isLogin, setIsLogin] = useState(true);
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  /*
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -23,6 +24,7 @@ export function LoginScreen() {
     if (authError) setError(authError);
     setIsLoading(false);
   };
+  */
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -37,11 +39,12 @@ export function LoginScreen() {
       <div className={styles.card}>
         <h1 className={styles.title}>{t('app.name')}</h1>
         <p className={styles.subtitle}>
-          {isLogin ? t('auth.welcomeBack') : t('auth.createAccount')}
+          {t('auth.welcomeBack')}
         </p>
 
         {error && <div className={styles.error}>{error}</div>}
 
+        {/* Temporarily disabled Email/Password login for initial launch
         <form onSubmit={handleEmailSubmit} className={styles.form}>
           <label className={styles.label}>
             {t('auth.email')}:
@@ -75,6 +78,7 @@ export function LoginScreen() {
         <div className={styles.divider}>
           <span>{t('auth.or')}</span>
         </div>
+        */}
 
         <button 
           onClick={handleGoogleSignIn} 
@@ -90,6 +94,7 @@ export function LoginScreen() {
           {t('auth.signInWithGoogle')}
         </button>
 
+        {/* Temporarily disabled Email/Password toggle
         <p className={styles.toggleText}>
           {isLogin ? t('auth.dontHaveAccount') : t('auth.alreadyHaveAccount')}
           <button 
@@ -101,6 +106,7 @@ export function LoginScreen() {
             {isLogin ? t('auth.signUp') : t('auth.signIn')}
           </button>
         </p>
+        */}
       </div>
     </div>
   );
