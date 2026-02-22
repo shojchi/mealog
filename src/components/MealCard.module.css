@@ -52,6 +52,36 @@
   transform: scale(1.05);
 }
 
+.deleteButton {
+  position: absolute;
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0;
+  transform: translateY(-4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #e53e3e;
+}
+
+.card:hover .deleteButton {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.deleteButton:hover {
+  background: #e53e3e;
+  color: white;
+  transform: scale(1.05);
+}
+
 .image {
   width: 100%;
   height: 100%;

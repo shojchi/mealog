@@ -78,6 +78,37 @@
   transform: rotate(45deg);
 }
 
+.signOutButton {
+  padding: var(--spacing-sm);
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.signOutButton:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.signOutButton svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 
 .main {
   flex: 1;
@@ -140,7 +171,7 @@
     font-size: 0.875rem;
   }
 
-  .settingsButton {
+  .settingsButton, .signOutButton {
     font-size: 1.25rem;
     min-width: 40px;
     height: 40px;

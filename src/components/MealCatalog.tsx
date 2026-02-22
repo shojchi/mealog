@@ -63,6 +63,30 @@ export function MealCatalog() {
     setEditingMeal(null);
   };
 
+  const handleDelete = async (meal: Meal) => {
+    if (window.confirm(t('common.delete') + '?')) {
+      try {
+        if (meal.id) {
+          // Delete locally
+          await db.meals.delete(meal.id);
+          
+          // Delete from Firestore in background if possible
+          try {
+            const { doc, deleteDoc } = await import('firebase/firestore');
+            const { db: firestoreDb } = await import('../services/db');
+            await deleteDoc(doc(firestoreDb, 'meals', meal.id.toString()));
+          } catch (e) {
+            console.error('Firestore delete failed (offline or uninitialized):', e);
+          }
+          
+          await loadMeals();
+        }
+      } catch (error) {
+        console.error('Failed to delete meal:', error);
+      }
+    }
+  };
+
   const handleViewRecipe = (meal: Meal) => {
     setSelectedMeal(meal);
   };
@@ -120,6 +144,7 @@ export function MealCatalog() {
               meal={meal}
               onClick={() => handleViewRecipe(meal)}
               onEdit={() => handleEdit(meal)}
+              onDelete={() => handleDelete(meal)}
             />
           ))}
         </div>

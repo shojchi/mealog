@@ -42,11 +42,13 @@
 
 .codeRow {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   align-items: center;
 }
 
 .code {
+  width: 100%;
   flex: 1;
   background: var(--color-white, #ffffff);
   color: var(--color-text-primary, #2d2d2d);
@@ -71,14 +73,12 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
-}
-
-.copyButton:hover {
-  opacity: 0.9;
+  width: 100%;
 }
 
 .joinForm {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
@@ -105,10 +105,34 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
+  width: 100%;
 }
 
-.joinButton:hover:not(:disabled) {
-  background: var(--bg-hover, rgba(0,0,0,0.05));
+.joinButton:disabled {
+  background: var(--color-gray, #9ca3af);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: not-allowed;
+}
+
+.leaveButton {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.leaveButton:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.leaveButton:disabled {
+  background: var(--color-gray, #9ca3af);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: not-allowed;
 }
 
 .error {
@@ -123,6 +147,14 @@
   color: #10b981;
   font-size: 0.85rem;
   background: rgba(16, 185, 129, 0.1);
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.offlineWarning {
+  color: #d97706;
+  font-size: 0.85rem;
+  background: rgba(245, 158, 11, 0.1);
   padding: 0.5rem;
   border-radius: 4px;
 }

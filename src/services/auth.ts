@@ -6,9 +6,11 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  type User,
+  type User as FirebaseUser,
 } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { app } from "../firebase";
+import { db } from "./db";
 
 // Initialize Firebase Auth
 export const auth = getAuth(app);
@@ -33,12 +35,41 @@ export const getAuthErrorMessage = (errorCode: string) => {
   }
 };
 
+/**
+ * Creates user and household records in Firestore if they don't exist
+ */
+const createOrUpdateUserDocument = async (user: FirebaseUser) => {
+  if (!user) return;
+
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+
+  // If user doc doesn't exist, this is their first time logging in
+  if (!userSnap.exists()) {
+    // 1. Create their default personal household (ID = their UID)
+    const householdRef = doc(db, "households", user.uid);
+    await setDoc(householdRef, {
+      name: `${user.displayName || user.email?.split("@")[0] || "My"} Household`,
+      members: [user.uid],
+    });
+
+    // 2. Create their user document pointing to this household
+    await setDoc(userRef, {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      currentHouseholdId: user.uid, // Start by syncing to their own private household
+    });
+  }
+};
+
 // Google Sign-In Provider
 const googleProvider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
+    await createOrUpdateUserDocument(result.user);
     return { user: result.user, error: null };
   } catch (error: unknown) {
     console.error("Google Sign-In Error:", error);
@@ -67,6 +98,7 @@ export const signInWithEmail = async (email: string, pass: string) => {
 export const signUpWithEmail = async (email: string, pass: string) => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, pass);
+    await createOrUpdateUserDocument(result.user);
     return { user: result.user, error: null };
   } catch (error: unknown) {
     const errorCode =
@@ -81,6 +113,8 @@ export const signUpWithEmail = async (email: string, pass: string) => {
 export const logOut = () => signOut(auth);
 
 // Subscribe to Auth State Changes
-export const subscribeToAuth = (callback: (user: User | null) => void) => {
+export const subscribeToAuth = (
+  callback: (user: FirebaseUser | null) => void,
+) => {
   return onAuthStateChanged(auth, callback);
 };

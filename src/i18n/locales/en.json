@@ -64,6 +64,7 @@
   "householdSettings": {
     "title": "🏠 Household Sync",
     "description": "Share your catalog and week plans with others by joining the same household.",
+    "offlineWarning": "You're offline. Some functions are limited.",
     "yourCode": {
       "title": "Your Invite Code",
       "subtitle": "Share this code with someone to let them join your household.",
@@ -82,6 +83,14 @@
         "notFound": "Household not found. Please check the code.",
         "unexpected": "An unexpected error occurred"
       }
+    },
+    "leave": {
+      "title": "Leave Current Household",
+      "description": "Leaving will return you to your personal workspace.",
+      "button": "Leave Household",
+      "confirm": "Are you sure you want to leave this household? You will return to your personal workspace.",
+      "success": "Successfully left the household!",
+      "error": "An error occurred while leaving."
     }
   },
   "dayView": {

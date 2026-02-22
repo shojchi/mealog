@@ -7,14 +7,20 @@ interface MealCardProps {
   meal: Meal;
   onClick?: () => void;
   onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export function MealCard({ meal, onClick, onEdit }: MealCardProps) {
+export function MealCard({ meal, onClick, onEdit, onDelete }: MealCardProps) {
   const { t } = useTranslation();
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
     onEdit?.();
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    onDelete?.();
   };
 
   return (
@@ -33,6 +39,15 @@ export function MealCard({ meal, onClick, onEdit }: MealCardProps) {
             aria-label={t('common.edit')}
           >
             ✏️ {t('common.edit')}
+          </button>
+        )}
+        {onDelete && (
+          <button 
+            className={styles.deleteButton}
+            onClick={handleDeleteClick}
+            aria-label={t('common.delete')}
+          >
+            🗑️ {t('common.delete')}
           </button>
         )}
       </div>

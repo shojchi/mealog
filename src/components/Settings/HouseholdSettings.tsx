@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { db } from '../../services/db';
-import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import styles from './HouseholdSettings.module.css';
 
 export function HouseholdSettings() {
@@ -12,6 +12,20 @@ export function HouseholdSettings() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   if (!user) return null;
 
@@ -73,12 +87,59 @@ export function HouseholdSettings() {
     }
   };
 
+  const handleLeaveHousehold = async () => {
+    if (!window.confirm(t('householdSettings.leave.confirm', 'Are you sure you want to leave this household? You will return to your personal workspace.'))) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      // Remove user from the current household's members array
+      const oldHouseholdRef = doc(db, 'households', currentHouseholdId);
+      await updateDoc(oldHouseholdRef, {
+        members: arrayRemove(user.uid)
+      });
+
+      // Update user's active household back to their own UID
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        currentHouseholdId: user.uid
+      });
+
+      // Update local state and trigger sync refresh
+      setUser({ ...user, currentHouseholdId: user.uid });
+      setSuccess(t('householdSettings.leave.success', 'Successfully left the household!'));
+      
+      // Note: A real app might want to trigger a full re-sync here
+      // reload page is a quick way to re-trigger the down-sync listener on mount
+      setTimeout(() => window.location.reload(), 1500);
+      
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(t('householdSettings.leave.error', 'An error occurred while leaving.'));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <h3 className={styles.title}>{t('householdSettings.title')}</h3>
       <p className={styles.description}>
         {t('householdSettings.description')}
       </p>
+
+      {!isOnline && (
+        <div className={styles.offlineWarning}>
+          ⚠️ {t('householdSettings.offlineWarning', "You're offline. Some functions are limited.")}
+        </div>
+      )}
 
       {error && <div className={styles.error}>{error}</div>}
       {success && <div className={styles.success}>{success}</div>}
@@ -106,11 +167,29 @@ export function HouseholdSettings() {
             className={styles.input}
             disabled={isLoading}
           />
-          <button type="submit" className={styles.joinButton} disabled={isLoading || !joinCode}>
+          <button 
+            type="submit" 
+            className={styles.joinButton} 
+            disabled={isLoading || !joinCode || !isOnline}
+          >
             {isLoading ? '...' : t('householdSettings.join.button')}
           </button>
         </form>
       </div>
+
+      {currentHouseholdId !== user.uid && (
+        <div className={styles.card}>
+          <h4>{t('householdSettings.leave.title', 'Leave Current Household')}</h4>
+          <p className={styles.subtext}>{t('householdSettings.leave.description', 'Leaving will return you to your personal workspace.')}</p>
+          <button 
+            onClick={handleLeaveHousehold} 
+            className={styles.leaveButton} 
+            disabled={isLoading || !isOnline}
+          >
+            {isLoading ? '...' : t('householdSettings.leave.button', 'Leave Household')}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

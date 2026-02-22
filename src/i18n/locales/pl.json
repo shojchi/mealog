@@ -62,8 +62,9 @@
     "close": "Zamknij"
   },
   "householdSettings": {
-    "title": "🏠 Synchronizacja domowników",
-    "description": "Udostępnij swój katalog i plany tygodniowe innym, dołączając do tego samego gospodarstwa domowego.",
+    "title": "🏠 Synchronizacja gospodarstwa",
+    "description": "Zarządzaj swoim gospodarstwem, aby synchronizować posiłki, listy i tygodniowe plany w czasie rzeczywistym.",
+    "offlineWarning": "Jesteś offline. Niektóre funkcje są ograniczone.",
     "yourCode": {
       "title": "Twój kod zaproszenia",
       "subtitle": "Udostępnij ten kod komuś, aby mógł dołączyć do Twojego gospodarstwa.",
@@ -82,6 +83,14 @@
         "notFound": "Nie znaleziono gospodarstwa. Sprawdź kod.",
         "unexpected": "Wystąpił nieoczekiwany błąd"
       }
+    },
+    "leave": {
+      "title": "Opuść obecne gospodarstwo domowe",
+      "description": "Opuszczenie spowoduje powrót do Twojej osobistej przestrzeni roboczej.",
+      "button": "Opuść gospodarstwo domowe",
+      "confirm": "Czy na pewno chcesz opuścić to gospodarstwo domowe? Powrócisz do swojej osobistej przestrzeni roboczej.",
+      "success": "Pomyślnie opuszczono gospodarstwo domowe!",
+      "error": "Wystąpił błąd podczas opuszczania."
     }
   },
   "dayView": {
