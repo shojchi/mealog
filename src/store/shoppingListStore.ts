@@ -27,6 +27,13 @@ export const useShoppingListStore = create<ShoppingListState>((set, get) => ({
         return;
       }
 
+      // Check for an existing list for this week to reuse its ID
+      const existingLists = await db.shoppingLists
+        .where("weekStartDate")
+        .equals(weekPlan.weekStart)
+        .toArray();
+      const existingList = existingLists.length > 0 ? existingLists[0] : null;
+
       // Collect all meal IDs from the week
       const mealIds = new Set<number>();
       weekPlan.days.forEach((day) => {
@@ -66,11 +73,21 @@ export const useShoppingListStore = create<ShoppingListState>((set, get) => ({
 
       // Create shopping list
       const items = Array.from(ingredientMap.values());
+
+      if (items.length === 0) {
+        // If the new list would be empty, delete any existing list for this week
+        if (existingList?.id) {
+          await db.shoppingLists.delete(existingList.id);
+        }
+        set({ shoppingList: null, loading: false });
+        return;
+      }
+
       const newList: ShoppingList = {
-        id: Date.now(),
+        id: existingList?.id || Date.now(),
         weekStartDate: weekPlan.weekStart,
         items,
-        createdAt: new Date(),
+        createdAt: existingList?.createdAt || new Date(),
       };
 
       // Save to database
@@ -102,6 +119,13 @@ export const useShoppingListStore = create<ShoppingListState>((set, get) => ({
     if (!shoppingList) return;
 
     const updatedItems = shoppingList.items.filter((item) => !item.purchased);
+
+    if (updatedItems.length === 0) {
+      await db.shoppingLists.delete(shoppingList.id);
+      set({ shoppingList: null });
+      return;
+    }
+
     const updatedList = { ...shoppingList, items: updatedItems };
 
     await db.shoppingLists.put(updatedList);
@@ -124,8 +148,19 @@ export const useShoppingListStore = create<ShoppingListState>((set, get) => ({
         .equals(weekPlan.weekStart) // weekStart is now already a timestamp
         .toArray();
 
+      const list = lists.length > 0 ? lists[0] : null;
+
+      // Filter out empty lists
+      if (list && list.items.length === 0) {
+        set({
+          shoppingList: null,
+          loading: false,
+        });
+        return;
+      }
+
       set({
-        shoppingList: lists.length > 0 ? lists[0] : null,
+        shoppingList: list,
         loading: false,
       });
     } catch (error) {
