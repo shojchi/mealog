@@ -1,0 +1,5 @@
+- checkboxes at creation meal screen
+- improve style of creation form
+- customize scroll
+- increase catalog of meals
+- change pins to more appropriate/modern style
