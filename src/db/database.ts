@@ -2,6 +2,14 @@ import Dexie, { type EntityTable } from "dexie";
 import type { Meal, WeeklyPlan, ShoppingList } from "../types";
 
 /**
+ * Key-value metadata record for app-level config (e.g., seed version)
+ */
+export interface MetaRecord {
+  key: string;
+  value: number | string;
+}
+
+/**
  * Mealog Database
  *
  * Uses Dexie.js as a wrapper around IndexedDB for offline-first data storage.
@@ -11,6 +19,7 @@ export class MealogDatabase extends Dexie {
   meals!: EntityTable<Meal, "id">;
   weeklyPlans!: EntityTable<WeeklyPlan, "id">;
   shoppingLists!: EntityTable<ShoppingList, "id">;
+  meta!: EntityTable<MetaRecord, "key">;
 
   constructor() {
     super("MealogDB");
@@ -55,6 +64,16 @@ export class MealogDatabase extends Dexie {
           }),
         ]);
       });
+
+    // Define schema version 4 (Added meta table for seed versioning)
+    this.version(4).stores({
+      meals:
+        "++id, mealType, *labels, createdAt, name, householdId, dirty, lastUpdated",
+      weeklyPlans:
+        "++id, weekStart, createdAt, householdId, dirty, lastUpdated",
+      shoppingLists: "++id, weekStartDate, createdAt",
+      meta: "key",
+    });
   }
 }
 

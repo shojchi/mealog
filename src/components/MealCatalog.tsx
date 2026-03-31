@@ -32,13 +32,13 @@ export function MealCatalog() {
       
       if (filter === 'all') {
         const allMeals = await db.meals.toArray();
-        results = allMeals.filter(m => m.householdId === activeHouseholdId || m.householdId === 'local');
+        results = allMeals.filter(m => !m.householdId || m.householdId === activeHouseholdId || m.householdId === 'local');
       } else {
         const filteredMeals = await db.meals
           .where('mealType')
           .equals(filter)
           .toArray();
-        results = filteredMeals.filter(m => m.householdId === activeHouseholdId || m.householdId === 'local');
+        results = filteredMeals.filter(m => !m.householdId || m.householdId === activeHouseholdId || m.householdId === 'local');
       }
       
       setMeals(results);
