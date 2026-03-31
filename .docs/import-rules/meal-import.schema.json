@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mealog.app/schemas/meal-import.json",
+  "title": "MealogMealImport",
+  "description": "Schema for importing a meal into the Mealog catalog. Do NOT include id, createdAt, updatedAt, or householdId.",
+  "type": "object",
+  "required": ["name", "description", "image", "recipe", "ingredients", "nutrition", "mealType", "labels", "servings"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Unique meal name. Title-case. Max 60 characters.",
+      "minLength": 3,
+      "maxLength": 60,
+      "examples": ["Grilled Salmon with Asparagus", "Overnight Oats with Chia Seeds"]
+    },
+    "description": {
+      "type": "string",
+      "description": "1–2 sentence description of the dish. No markdown.",
+      "minLength": 10,
+      "maxLength": 200,
+      "examples": ["Herb-crusted salmon fillet served with roasted asparagus and cherry tomatoes."]
+    },
+    "image": {
+      "type": "object",
+      "description": "Meal photo. Use Unsplash URLs for seed/import meals.",
+      "required": ["type", "content"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["url", "upload"],
+          "description": "Use 'url' for seed/import meals."
+        },
+        "content": {
+          "type": "string",
+          "description": "Unsplash URL with ?w=400 suffix, or base64 data URI for uploads.",
+          "examples": ["https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400"]
+        }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "description": "Recipe instructions — either a URL or inline text steps.",
+      "required": ["type", "content"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["url", "text"],
+          "description": "'text' for inline instructions, 'url' for external link."
+        },
+        "content": {
+          "type": "string",
+          "minLength": 10,
+          "description": "URL string or plain-text cooking instructions (1–4 sentences).",
+          "examples": [
+            "Season salmon with herbs. Roast at 400°F for 12-15 minutes. Toss vegetables in olive oil and roast 20 minutes."
+          ]
+        }
+      }
+    },
+    "ingredients": {
+      "type": "array",
+      "description": "List of ingredients. Quantities are for the WHOLE RECIPE (all servings combined).",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["name", "quantity", "unit"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Common ingredient name. Title-case.",
+            "minLength": 2,
+            "examples": ["Chicken breast", "Olive oil", "Cherry tomatoes"]
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Total quantity for the whole recipe (NOT per serving).",
+            "exclusiveMinimum": 0
+          },
+          "unit": {
+            "type": "string",
+            "description": "Measurement unit.",
+            "enum": ["g", "kg", "ml", "l", "pcs", "tbsp", "tsp", "cup"],
+            "$comment": "g=grams, kg=kilograms, ml=millilitres, l=litres, pcs=pieces, tbsp=tablespoon, tsp=teaspoon, cup=cup"
+          },
+          "category": {
+            "type": "string",
+            "description": "Ingredient category for shopping list grouping.",
+            "enum": ["produce", "meat", "dairy", "grains", "spices", "other"],
+            "$comment": "produce=fruit/veg/herbs, meat=meat/fish/poultry, dairy=milk/cheese/eggs/butter, grains=rice/pasta/bread/oats, spices=dry spices/herbs, other=oils/sauces/canned goods/nut butters"
+          }
+        }
+      }
+    },
+    "nutrition": {
+      "type": "object",
+      "description": "Nutritional information PER SERVING. Cross-reference with USDA FoodData Central (fdc.nal.usda.gov).",
+      "required": ["calories", "protein", "carbs", "fat"],
+      "additionalProperties": false,
+      "properties": {
+        "calories": {
+          "type": "number",
+          "description": "Kilocalories per serving. Round to nearest 5.",
+          "minimum": 0,
+          "maximum": 2000
+        },
+        "protein": {
+          "type": "number",
+          "description": "Grams of protein per serving.",
+          "minimum": 0
+        },
+        "carbs": {
+          "type": "number",
+          "description": "Grams of total carbohydrates per serving.",
+          "minimum": 0
+        },
+        "fat": {
+          "type": "number",
+          "description": "Grams of total fat per serving.",
+          "minimum": 0
+        },
+        "fiber": {
+          "type": "number",
+          "description": "Grams of dietary fiber per serving. (optional)",
+          "minimum": 0
+        },
+        "vitaminC": {
+          "type": "number",
+          "description": "Vitamin C as % of daily value (DV = 90mg). (optional)",
+          "minimum": 0,
+          "maximum": 300
+        },
+        "vitaminD": {
+          "type": "number",
+          "description": "Vitamin D as % of daily value (DV = 20mcg). (optional)",
+          "minimum": 0,
+          "maximum": 300
+        },
+        "calcium": {
+          "type": "number",
+          "description": "Calcium as % of daily value (DV = 1300mg). (optional)",
+          "minimum": 0,
+          "maximum": 300
+        },
+        "iron": {
+          "type": "number",
+          "description": "Iron as % of daily value (DV = 18mg). (optional)",
+          "minimum": 0,
+          "maximum": 300
+        }
+      }
+    },
+    "mealType": {
+      "type": "string",
+      "description": "Meal category.",
+      "enum": ["breakfast", "lunch", "dinner", "snack"]
+    },
+    "labels": {
+      "type": "array",
+      "description": "Dietary and lifestyle tags. Use an empty array [] if none apply.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "quick",
+          "high-protein",
+          "low-carb",
+          "vegetarian",
+          "vegan",
+          "gluten-free",
+          "dairy-free",
+          "delicates"
+        ],
+        "$comment": "quick=<30min, high-protein=>=25g/serving, low-carb=<=20g/serving, delicates=special occasion"
+      },
+      "uniqueItems": true
+    },
+    "servings": {
+      "type": "integer",
+      "description": "Number of servings the recipe yields. Must be at least 2.",
+      "minimum": 2,
+      "maximum": 20
+    }
+  },
+  "examples": [
+    {
+      "name": "Lemon Herb Chicken",
+      "description": "Pan-seared chicken breast with lemon, garlic, and fresh herbs.",
+      "image": {
+        "type": "url",
+        "content": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400"
+      },
+      "recipe": {
+        "type": "text",
+        "content": "Season chicken with salt, pepper, garlic, and herbs. Sear in olive oil 6 min per side. Deglaze with lemon juice."
+      },
+      "ingredients": [
+        { "name": "Chicken breast", "quantity": 400, "unit": "g",    "category": "meat" },
+        { "name": "Lemon",          "quantity": 2,   "unit": "pcs",  "category": "produce" },
+        { "name": "Garlic",         "quantity": 3,   "unit": "pcs",  "category": "produce" },
+        { "name": "Olive oil",      "quantity": 2,   "unit": "tbsp", "category": "other" },
+        { "name": "Fresh thyme",    "quantity": 1,   "unit": "tbsp", "category": "spices" }
+      ],
+      "nutrition": {
+        "calories": 320,
+        "protein": 40,
+        "carbs": 4,
+        "fat": 16,
+        "vitaminC": 30
+      },
+      "mealType": "dinner",
+      "labels": ["high-protein", "gluten-free", "dairy-free", "low-carb"],
+      "servings": 2
+    }
+  ]
+}
