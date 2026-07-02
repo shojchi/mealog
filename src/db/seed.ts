@@ -45,13 +45,6 @@ export async function seedDatabase() {
     currentVersion = 0;
   }
 
-  if (currentVersion >= SEED_VERSION) {
-    console.log(
-      `ℹ️ Seed version ${currentVersion} is up-to-date (latest: ${SEED_VERSION}), skipping seed`,
-    );
-    return;
-  }
-
   // Collect names of meals already in the database so we never duplicate
   const existingNames = new Set(
     (await db.meals.toArray()).map((m) => m.name),
@@ -67,11 +60,6 @@ export async function seedDatabase() {
 
   if (newMeals.length > 0) {
     await db.meals.bulkAdd(newMeals);
-    console.log(`✅ Seeded ${newMeals.length} new meals (v${SEED_VERSION})`);
-  } else {
-    console.log(
-      `ℹ️ All ${allSeedMeals.length} seed meals already exist, nothing to add`,
-    );
   }
 
   // Persist the new seed version

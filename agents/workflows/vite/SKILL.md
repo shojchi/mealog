@@ -30,7 +30,3 @@ This project uses Vite as the build tool and development server (`vite-plugin-re
 
 - `@vitejs/plugin-react`: Enables Fast Refresh and JSX transformation without manual `React` imports.
 - `vite-plugin-pwa`: Generates the service worker and manifest for the PWA.
-
-## Performance
-
-- Monitor the build output sizes. When adding large dependencies, consider dynamic imports (`import()`) to split the vendor chunks, especially for libraries that aren't needed on the critical path to first pain (like chart libraries or heavy internationalization chunks).
