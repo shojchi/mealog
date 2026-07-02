@@ -3,3 +3,6 @@
 - customize scroll
 - increase catalog of meals
 - change pins to more appropriate/modern style
+- add search by meal
+- optimization of performance at changing language
+- add android support at documentation
