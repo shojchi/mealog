@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { startOfWeek, addDays, subDays, format } from 'date-fns';
+import { startOfWeek, addDays, subDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useWeekPlanStore } from '../store/weekPlanStore';
 import { useNutritionStore } from '../store/nutritionStore';
@@ -316,7 +316,7 @@ export function DayView() {
           isOpen={isMealSelectorOpen}
           onClose={() => setIsMealSelectorOpen(false)}
           onSelectMeal={handleSelectMeal}
-          dayName={t(`weekDays.${currentDate.getDay()}`, format(currentDate, 'EEEE'))}
+          dayName={getDayName(currentDate)}
         />
       )}
       
