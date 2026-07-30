@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { db } from '../db';
 import type { Meal, MealType } from '../types';
@@ -18,6 +18,7 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
   const { user } = useAuthStore();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [filter, setFilter] = useState<MealType | 'all'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
   const loadMeals = useCallback(async () => {
@@ -45,9 +46,16 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
 
   useEffect(() => {
     if (isOpen) {
+      setSearchQuery('');
       loadMeals();
     }
   }, [isOpen, loadMeals]);
+
+  const filteredMeals = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return meals;
+    return meals.filter(meal => meal.name.toLowerCase().includes(query));
+  }, [meals, searchQuery]);
 
   const handleSelectMeal = (mealId: number) => {
     onSelectMeal(mealId);
@@ -64,6 +72,17 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
           <button className={styles.closeButton} onClick={onClose}>
             ×
           </button>
+        </div>
+
+        <div className={styles.searchBar}>
+          <input
+            type="search"
+            className={styles.searchInput}
+            placeholder={t('mealSelector.searchPlaceholder')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoFocus
+          />
         </div>
 
         {/* Filters */}
@@ -89,10 +108,10 @@ export function MealSelectorModal({ isOpen, onClose, onSelectMeal, dayName }: Me
         <div className={styles.mealGrid}>
           {loading ? (
             <div className={styles.loading}>Loading...</div>
-          ) : meals.length === 0 ? (
+          ) : filteredMeals.length === 0 ? (
             <div className={styles.empty}>{t('catalog.noMealsFound', 'No meals found')}</div>
           ) : (
-            meals.map(meal => (
+            filteredMeals.map(meal => (
               <div
                 key={meal.id}
                 className={styles.mealCard}

@@ -203,7 +203,8 @@
     "cost": "Вартість"
   },
   "mealSelector": {
-    "addMealTo": "Додати страву до"
+    "addMealTo": "Додати страву до",
+    "searchPlaceholder": "Пошук страв..."
   },
   "units": {
     "g": "г",

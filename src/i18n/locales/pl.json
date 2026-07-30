@@ -203,7 +203,8 @@
     "cost": "Koszt"
   },
   "mealSelector": {
-    "addMealTo": "Dodaj posiłek do"
+    "addMealTo": "Dodaj posiłek do",
+    "searchPlaceholder": "Szukaj posiłków..."
   },
   "units": {
     "g": "g",

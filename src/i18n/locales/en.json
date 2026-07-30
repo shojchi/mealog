@@ -203,7 +203,8 @@
     "cost": "Cost"
   },
   "mealSelector": {
-    "addMealTo": "Add Meal to"
+    "addMealTo": "Add Meal to",
+    "searchPlaceholder": "Search meals..."
   },
   "units": {
     "g": "g",
