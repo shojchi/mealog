@@ -197,14 +197,12 @@
   width: 100%;
 }
 
-/* Nutrition Grid */
 .nutritionGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-md);
 }
 
-/* Labels */
 .labelsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -230,9 +228,33 @@
 }
 
 .checkbox input[type="checkbox"] {
-  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
   margin: 0;
-  width: auto;
+  flex-shrink: 0;
+  border: 2px solid var(--color-gray-dark);
+  border-radius: 4px;
+  background: var(--color-white);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.checkbox input[type="checkbox"]:checked {
+  background-color: var(--color-teal);
+  border-color: var(--color-teal);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
+}
+
+.checkbox input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
 }
 
 .checkbox input[type="checkbox"]:checked + span {
@@ -240,7 +262,6 @@
   font-weight: var(--font-weight-semibold);
 }
 
-/* Add Label Button */
 .addLabelButton {
   display: flex;
   align-items: center;
@@ -256,7 +277,6 @@
   transition: all 0.2s;
 }
 
-/* Custom Label Modal */
 .labelModalOverlay {
   position: fixed;
   top: 0;
@@ -334,7 +354,7 @@
 }
 
 
-/* Recipe Toggle */
+
 .recipeToggle {
   display: flex;
   gap: var(--spacing-xs);
@@ -363,7 +383,6 @@
   border-color: var(--color-teal);
 }
 
-/* Error Message */
 .error {
   background: var(--color-red-light);
   color: var(--color-red);
@@ -375,7 +394,6 @@
   border: 1px solid var(--color-red);
 }
 
-/* Form Actions */
 .actions {
   display: flex;
   gap: var(--spacing-md);
@@ -416,7 +434,6 @@
   box-shadow: 0 4px 12px rgba(98, 219, 203, 0.3);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .nutritionGrid {
     grid-template-columns: repeat(2, 1fr);
