@@ -36,7 +36,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
         <div className={styles.header}>
           <h2>⚙️ {t('settings.title')}</h2>
           <button className={styles.closeButton} onClick={onClose}>
@@ -44,9 +43,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </button>
         </div>
 
-        {/* Content */}
         <div className={styles.content}>
-          {/* Language Section */}
           <section className={styles.section}>
             <h3>🌐 {t('settings.language')}</h3>
             <select 
@@ -62,7 +59,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </select>
           </section>
 
-          {/* Appearance Section */}
           <section className={styles.section}>
             <h3>🎨 {t('settings.appearance')}</h3>
             <select 
@@ -76,25 +72,21 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </select>
           </section>
 
-          {/* Household Sync Section */}
           <section className={styles.section}>
             <HouseholdSettings />
           </section>
 
-          {/* Placeholder: Notifications */}
           <section className={`${styles.section} ${styles.disabled}`}>
             <h3>🔔 {t('settings.notifications')}</h3>
             <p className={styles.comingSoon}>{t('settings.comingSoon')}</p>
           </section>
 
-          {/* Placeholder: Data Management */}
           <section className={`${styles.section} ${styles.disabled}`}>
             <h3>💾 {t('settings.dataManagement')}</h3>
             <p className={styles.comingSoon}>{t('settings.comingSoon')}</p>
           </section>
         </div>
 
-        {/* Footer */}
         <div className={styles.footer}>
           <button className={styles.closeFooterButton} onClick={onClose}>
             {t('settings.close')}

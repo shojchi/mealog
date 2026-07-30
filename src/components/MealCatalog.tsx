@@ -112,7 +112,7 @@ export function MealCatalog() {
           className={styles.createButton}
           onClick={() => setIsModalOpen(true)}
         >
-          ➕ {t('catalog.createNew')}
+          {t('catalog.createNew')}
         </button>
       </div>
 
