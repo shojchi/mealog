@@ -75,7 +75,6 @@
 .settingsButton:hover {
   background: rgba(107, 158, 158, 0.1);
   border-color: var(--color-teal);
-  transform: rotate(45deg);
 }
 
 .signOutButton {
