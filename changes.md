@@ -1,8 +1,8 @@
-- checkboxes at creation meal screen
-- improve style of creation form
-- customize scroll
+- checkboxes at creation meal screen ✅
+- improve style of creation form 
+- customize scroll ✅
 - increase catalog of meals
 - change pins to more appropriate/modern style
-- add search by meal
+- add search by meal ✅
 - optimization of performance at changing language
 - add android support at documentation

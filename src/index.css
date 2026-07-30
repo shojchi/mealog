@@ -106,6 +106,7 @@
 }
 
 body {
+  scrollbar-color: var(--color-teal) var(--color-cream);
   font-family: var(--font-primary);
   font-size: 16px;
   font-weight: var(--font-weight-normal);
